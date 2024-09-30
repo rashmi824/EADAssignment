@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Backend.Data;
 
+
 namespace Backend
 {
     public class Startup
@@ -34,7 +35,8 @@ namespace Backend
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>(); // Register IPasswordHasher if needed
-            
+            services.AddScoped<IOrderService, OrderService>();
+
             // Configure JWT authentication
             services.AddAuthentication(options =>
             {
@@ -94,7 +96,7 @@ namespace Backend
                 endpoints.MapControllers(); // Map attribute routes
             });
 
-            
+
         }
     }
 }
