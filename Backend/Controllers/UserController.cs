@@ -19,7 +19,7 @@ public class UsersController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
-        var user = await _userService.Register(dto.Email, dto.Username, dto.Password, dto.Role);
+        var user = await _userService.Register(dto.Email, dto.Username, dto.Password, dto.Role, dto.Address, dto.MobileNumber);
         if (user == null) 
             return BadRequest("User already exists");
 
@@ -35,36 +35,35 @@ public class UsersController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
-        var user = await _userService.Authenticate(dto.Email, dto.Password);
+        var (user, jwtToken, refreshToken) = await _userService.Authenticate(dto.Email, dto.Password, dto.Role);
         if (user == null) return Unauthorized("Invalid credentials");
 
         // Check if the user is a customer and whether their account is approved
-        if (user.Role == "Customer" && user.IsApproved == false)
-        {
-            return Unauthorized("Your account is pending approval from CSR.");
-        }
-
-        var token = _jwtService.GenerateJwt(user);
-        return Ok(new { token });
+        // Check if the user is a customer and whether their account is approved
+    if (user.Role == "Customer" && (user.IsApproved ?? false) == false)
+    {
+        return Unauthorized("Your account is pending approval from CSR.");
     }
 
-    // Logout endpoint (if applicable, depending on your JWT implementation)
-    [HttpPost("logout")]
-    public IActionResult Logout()
-    {
-        // Implement your logout logic, e.g., by invalidating the token or removing it from client storage.
-        return Ok("Logged out successfully.");
+
+        return Ok(new { token = jwtToken, refreshToken }); // Return both tokens
     }
 
-    // Endpoint for CSR to approve customers
-    [HttpPost("approve-customer/{customerId}")]
-    public async Task<IActionResult> ApproveCustomer(string customerId)
+    
+
+    // Endpoint for CSR to approve or disapprove customers
+    [HttpPut("approve-customer/{customerId}")]
+    public async Task<IActionResult> ApproveCustomer(string customerId, [FromBody] bool isApproved)
     {
-        var result = await _userService.ApproveCustomer(customerId);
+        // Validate the input
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _userService.ApproveCustomer(customerId, isApproved);
         if (!result)
-            return NotFound("Customer not found or is already approved.");
+            return NotFound("Customer not found or update failed.");
 
-        return Ok("Customer approved successfully.");
+        return Ok(isApproved ? "Customer approved successfully." : "Customer disapproved successfully.");
     }
 
     // Get a user by ID
@@ -104,4 +103,19 @@ public class UsersController : ControllerBase
 
         return Ok("User deleted successfully.");
     }
+
+    // Logout endpoint
+    [HttpPost("logout")]
+    public IActionResult Logout([FromBody] LogoutDto dto) // Assuming LogoutDto contains token and optional refreshToken
+    {
+        if (string.IsNullOrEmpty(dto.Token) && string.IsNullOrEmpty(dto.RefreshToken))
+            return BadRequest("Token or refresh token is required.");
+
+        // Call the JwtService logout method
+        _jwtService.Logout(dto.Token, dto.RefreshToken); // Pass both tokens
+        return Ok("Logged out successfully.");
+    }
+
+
+
 }

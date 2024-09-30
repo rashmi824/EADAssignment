@@ -1,11 +1,6 @@
 public class CommentDto
 {
-    public string CommentText { get; set; }
-    public int Rating { get; set; } // Ensure this property exists
-
-    public CommentDto(string commentText, int rating) // Updated constructor
-    {
-        CommentText = commentText;
-        Rating = rating; // Initialize Rating
-    }
+    public string CustomerId { get; set; } // ID of the customer leaving the comment
+    public string? CommentText { get; set; } // Optional text for the comment
+    public double Rating { get; set; } // Rating (required)
 }

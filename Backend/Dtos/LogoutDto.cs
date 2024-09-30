@@ -1,5 +1,5 @@
-
 public class LogoutDto
 {
-    public string UserId { get; set; }
+    public string Token { get; set; } // JWT token
+    public string RefreshToken { get; set; } // Optional refresh token
 }
