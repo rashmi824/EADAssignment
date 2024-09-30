@@ -29,4 +29,6 @@ public interface IUserService
     
     Task<User> UpdateComment(string vendorId, string commentId, string commentText);
 
+    Task NotifyCsrForApproval(User newUser);
+
 }

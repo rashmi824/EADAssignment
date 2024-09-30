@@ -10,12 +10,17 @@ public class UserService : IUserService
     private readonly IMongoCollection<User> _users;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtService _jwtService;
+    private readonly GmailService _gmailService;
 
-    public UserService(IMongoDbContext dbContext, IPasswordHasher passwordHasher, IJwtService jwtService)
+
+
+
+    public UserService(IMongoDbContext dbContext, IPasswordHasher passwordHasher, IJwtService jwtService,GmailService gmailService)
     {
         _users = dbContext.Users;
         _passwordHasher = passwordHasher;
         _jwtService = jwtService; // Inject JWT service
+        _gmailService = gmailService;
     }
 
     // Authenticate method using email and password and Role
@@ -35,6 +40,7 @@ public class UserService : IUserService
 
         return (user, jwtToken, refreshToken); // Return the authenticated user and tokens
     }
+
 
     // Register method
     public async Task<User> Register(string email, string username, string password, string role, string address, int mobileNumber)
@@ -67,14 +73,43 @@ public class UserService : IUserService
 
         await _users.InsertOneAsync(user);
 
-        // If user is a customer, send notification to CSR for approval
-        if (user.Role == "Customer")
-        {
-            await NotifyCsrForApproval(user); // Notify CSR about pending customer approval
-        }
+       
 
         return user;
     }
+
+    public async Task NotifyCsrForApproval(User newUser)
+{
+    var csrUsers = await _users.Find(u => u.Role == "CSR").ToListAsync();
+    string subject = "New Customer Registration Pending Approval";
+    string message = $"A new customer has registered. Username: {newUser.Username}, Email: {newUser.Email}. Please review and approve.";
+
+    int successfulEmails = 0;
+    int failedEmails = 0;
+
+    foreach (var csr in csrUsers)
+    {
+        try
+        {
+            // Use the centralized GmailService to send the notification
+            await _gmailService.SendEmailAsync(csr.Email, subject, message);
+            Console.WriteLine($"Email successfully sent to {csr.Email}.");
+            successfulEmails++; // Count successful email
+        }
+        catch (Exception ex)
+        {
+            // Log the error (you can implement a logger or handle the exception)
+            Console.WriteLine($"Error sending email to {csr.Email}: {ex.Message}");
+            failedEmails++; // Count failed email
+        }
+    }
+
+    // Log the result of email notifications
+    Console.WriteLine($"Emails sent successfully: {successfulEmails}, Emails failed: {failedEmails}");
+
+    
+}
+
 
     // ApproveCustomer method
     public async Task<bool> ApproveCustomer(string customerId, bool isApproved)
@@ -84,12 +119,6 @@ public class UserService : IUserService
         return result.ModifiedCount > 0; // Return true if the update was successful
     }
 
-    // Notify CSR method
-    private async Task NotifyCsrForApproval(User user)
-    {
-        Console.WriteLine($"New customer registration pending approval: {user.Id}");
-        // Implement push notification or other notification methods here
-    }
 
     // Check if the user is an administrator
     public async Task<bool> IsAdministrator(string userId)
