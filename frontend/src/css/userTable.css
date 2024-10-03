@@ -1,0 +1,119 @@
+/* src/css/UserTable.css */
+.unique-main-container {
+  display: flex;
+  height: 100%;
+}
+
+.unique-content-container {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f4f4f9;
+}
+
+.unique-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.unique-search-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.unique-search-input {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.user-header{
+justify-content: center;
+align-items: center;
+
+margin: 0;
+text-align: center;
+}
+
+.unique-btn {
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.unique-btn-primary {
+  background-color:  #870fa5;
+  color: white;
+}
+
+.unique-btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.unique-btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.unique-btn-1 {
+  background-color: #ffc107;
+  color: white;
+}
+
+.unique-btn-2 {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.unique-table-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+
+.unique-user-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tab-btn
+{
+  background-color: #870fa5;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+  border: 1px solid #000000;
+}
+
+.unique-user-table th,
+.unique-user-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.unique-user-table th {
+  background-color:  #870fa5;
+  color: white;
+}
+
+.unique-user-table td {
+  background-color: #f9f9f9;
+}
+
+.unique-user-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.unique-user-table .unique-btn {
+  margin-right: 5px;
+}
