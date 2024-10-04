@@ -12,5 +12,13 @@ namespace Backend.Routes
         public const string GetAllUsers = "api/users";
         public const string UpdateUser = "api/users/{userId}";
         public const string DeleteUser = "api/users/{userId}";
+
+        // Order-related routes
+        public const string CreateOrder = "api/orders";
+        public const string UpdateOrder = "api/orders/{id}";
+        public const string CancelOrder = "api/orders/{id}";
+        public const string MarkAsDelivered = "api/orders/mark-delivered/{id}";
+        public const string GetOrdersByCustomerId = "api/orders/customer/{customerId}";
+        public const string GetOrdersByVendorId = "api/orders/vendor/{vendorId}";
     }
 }
