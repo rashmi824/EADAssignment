@@ -1,0 +1,16 @@
+/* src/components/Dashboard.css */
+.dashboard {
+    display: flex;
+    background: linear-gradient(135deg,#e2d2e6 , #f9bfff);
+    padding:10px;
+  }
+  
+.dashboard-content {
+    margin-left: 20px; /* Adjust for spacing */
+    padding: 20px;
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
