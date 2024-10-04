@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../css/Order/OrderList.css";
 
 function OrderList() {
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate(); // Use navigate for redirection
 
   useEffect(() => {
     axios
@@ -16,20 +18,20 @@ function OrderList() {
       });
   }, []);
 
-  const updateOrderStatus = async (orderId, newStatus) => {
-    try {
-      await axios.put(`http://localhost:5266/api/orders/${orderId}`, {
-        status: newStatus,
-      });
-      alert("Order status updated!");
-      // Refresh orders to get the updated status
-      const response = await axios.get("http://localhost:5266/api/orders");
-      setOrders(response.data);
-    } catch (error) {
-      console.error("There was an error updating the order status!", error);
-      alert("Failed to update order status.");
-    }
-  };
+  // const updateOrderStatus = async (id, newStatus) => {
+  //   try {
+  //     await axios.put(`http://localhost:5266/api/orders/${id}`, {
+  //       status: newStatus,
+  //     });
+  //     alert("Order status updated!");
+  //     // Refresh orders to get the updated status
+  //     const response = await axios.get("http://localhost:5266/api/orders");
+  //     setOrders(response.data);
+  //   } catch (error) {
+  //     console.error("There was an error updating the order status!", error);
+  //     alert("Failed to update order status.");
+  //   }
+  // };
 
   const cancelOrder = async (id) => {
     try {
@@ -60,6 +62,10 @@ function OrderList() {
     }
   };
 
+  const goToUpdateOrder = (id) => {
+    navigate(`/update-order/${id}`); // Navigate to UpdateOrder page
+  };
+
   return (
     <div className="container">
       <h2 className="mt-4">Orders</h2>
@@ -69,38 +75,42 @@ function OrderList() {
             <th>Order ID</th>
             <th>Customer</th>
             <th>Status</th>
-            <th>Update Status</th>
+            {/* <th>Update Status</th> */}
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
-            <tr key={order.orderId}>
-              <td>{order.orderId}</td>
+          {orders.map((order, index) => (
+            <tr key={order.id}>
+              <td>{index + 1}</td>
               <td>{order.customerId}</td>
               <td>{order.status}</td>
-              <td>
+              {/* <td>
                 <select
                   value={order.status}
-                  onChange={(e) =>
-                    updateOrderStatus(order.orderId, e.target.value)
-                  }
+                  onChange={(e) => updateOrderStatus(order.id, e.target.value)}
                 >
                   <option value="Processing">Processing</option>
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
-              </td>
+              </td> */}
               <td>
                 <button
+                  className="btn btn-warning btn-sm mr-2"
+                  onClick={() => goToUpdateOrder(order.id)} // Navigate to update order page
+                >
+                  Update
+                </button>
+                <button
                   className="btn btn-danger btn-sm mr-2"
-                  onClick={() => cancelOrder(order.orderId)}
+                  onClick={() => cancelOrder(order.id)}
                 >
                   Cancel
                 </button>
                 <button
                   className="btn btn-success btn-sm"
-                  onClick={() => markAsDelivered(order.orderId)}
+                  onClick={() => markAsDelivered(order.id)}
                 >
                   Mark as Delivered
                 </button>

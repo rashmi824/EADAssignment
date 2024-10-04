@@ -1,16 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../css/Order/OrderForm.css"; // Import any specific styles you have
 
-const OrderForm = () => {
+const UpdateOrder = () => {
+  const { id } = useParams(); // Get the order ID from the URL
   const [customerId, setCustomerId] = useState("");
-  const [customerEmail, setCustomerEmail] = useState(""); // New state for CustomerEmail
+  const [customerEmail, setCustomerEmail] = useState(""); // Added field for Customer Email
   const [vendorId, setVendorId] = useState("");
   const [productIds, setProductIds] = useState("");
   const [status, setStatus] = useState("Processing"); // Default status
   const [error, setError] = useState("");
   const navigate = useNavigate(); // Use navigate for redirection
+
+  // Fetch the order details to update
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5266/api/orders/${id}`
+        );
+        const order = response.data;
+        setCustomerId(order.customerId);
+        setCustomerEmail(order.customerEmail); // Set customer email
+        setVendorId(order.vendorId);
+        setProductIds(order.productIds.join(", ")); // Convert array to string
+        setStatus(order.status);
+      } catch (err) {
+        setError("Error fetching order details.");
+        console.error(err);
+      }
+    };
+
+    fetchOrder();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,27 +42,25 @@ const OrderForm = () => {
     // Prepare the order data
     const orderData = {
       customerId,
-      customerEmail, // Include CustomerEmail in the payload
+      customerEmail, // Include customer email
       vendorId,
       productIds: productIds.split(",").map((id) => id.trim()), // Convert to array
       status,
-      orderDate: new Date(), // Assuming order date is the current date
-      notes: [], // Initialize with no notes
     };
 
     try {
-      await axios.post("http://localhost:5266/api/orders", orderData); // Make the API call
-      alert("Order created successfully!");
-      navigate("/orders"); // Redirect to order list after creation
+      await axios.put(`http://localhost:5266/api/orders/${id}`, orderData); // Update the order
+      alert("Order updated successfully!");
+      navigate("/orders"); // Redirect to order list after update
     } catch (err) {
-      setError("There was an error creating the order. Please try again.");
+      setError("There was an error updating the order. Please try again.");
       console.error(err);
     }
   };
 
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4">Create Order</h2>
+      <h2 className="text-center mb-4">Update Order</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -99,12 +120,12 @@ const OrderForm = () => {
             <option value="Cancelled">Cancelled</option>
           </select>
         </div>
-        <button type="submit" className="btn btn-primary">
-          Create Order
+        <button type="submit" className="btn btn-warning">
+          Update Order
         </button>
       </form>
     </div>
   );
 };
 
-export default OrderForm;
+export default UpdateOrder;
