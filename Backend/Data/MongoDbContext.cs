@@ -1,3 +1,4 @@
+using Backend.Models;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
@@ -23,6 +24,7 @@ namespace Backend.Data
         public IMongoCollection<Vendor> Vendors => _database.GetCollection<Vendor>("Vendors");
         //public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
         public IMongoCollection<Comment> Comments => _database.GetCollection<Comment>("Comments");
+        //public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
         public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
     }
 }

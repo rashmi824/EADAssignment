@@ -67,6 +67,7 @@ namespace Backend
                             options.AddPolicy("Administrator", policy => policy.RequireRole("Administrator"));
                             options.AddPolicy("CSR", policy => policy.RequireRole("CSR"));
                             options.AddPolicy("Vendor", policy => policy.RequireRole("Vendor"));
+                            options.AddPolicy("Order", policy => policy.RequireRole("Order"));
                         });
 
                         // Add MVC controllers

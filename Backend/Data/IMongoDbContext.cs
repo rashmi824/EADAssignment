@@ -1,3 +1,4 @@
+using Backend.Models;
 using MongoDB.Driver;
 
 
@@ -10,6 +11,7 @@ namespace Backend.Data
         // IMongoCollection<Product> Products { get; }
         IMongoCollection<Comment> Comments { get; }
 
+        // IMongoCollection<Order> Orders { get; }
         IMongoCollection<Order> Orders { get; }
     }
 }

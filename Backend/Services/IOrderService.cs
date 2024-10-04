@@ -1,12 +1,18 @@
-using Backend.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Backend.Models;
+using Backend.Dtos;
 
 public interface IOrderService
 {
-    Task<List<Order>> GetOrdersAsync();
-    Task<Order> GetOrderByIdAsync(string id);
-    Task<Order> CreateOrderAsync(Order newOrder);
-    Task<bool> UpdateOrderAsync(string id, Order updatedOrder);
-    Task<bool> DeleteOrderAsync(string id);
+    Task<Order> CreateOrder(OrderDto orderDto);
+    Task<Order> UpdateOrder(string orderId, OrderDto orderDto);
+    Task<bool> CancelOrder(string orderId, string note);
+    Task<Order> MarkAsDelivered(string orderId);
+    Task<List<Order>> GetOrdersByCustomerId(string customerId);
+    Task<List<Order>> GetOrdersByVendorId(string vendorId);
+    // Add other methods as necessary
+    Task<Order> GetOrderById(string orderId); // Newly added method
+
+    Task<List<Order>> GetAllOrders();
 }
