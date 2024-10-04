@@ -25,6 +25,6 @@ namespace Backend.Data
         //public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
         public IMongoCollection<Comment> Comments => _database.GetCollection<Comment>("Comments");
         //public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
-        public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
+        public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Order");
     }
 }

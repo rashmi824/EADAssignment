@@ -18,7 +18,7 @@ namespace Backend.Controllers
         public async Task<IActionResult> CreateOrder([FromBody] OrderDto orderDto)
         {
             var order = await _orderService.CreateOrder(orderDto);
-            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id.ToString() }, order); // Return ObjectId as string
+            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order); // Return ObjectId as string
         }
 
         [HttpGet("{id}")]
@@ -35,22 +35,17 @@ namespace Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(string id, [FromBody] OrderDto orderDto)
         {
+            if (orderDto == null)
+            {
+                return BadRequest("Order data is required.");
+            }
+
             var order = await _orderService.UpdateOrder(id, orderDto);
             if (order == null)
             {
-                return NotFound();
+                return NotFound("Order not found.");
             }
             return Ok(order);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> CancelOrder(string id, [FromBody] string note)
-        {
-            var result = await _orderService.CancelOrder(id, note);
-            if (!result)
-                return NotFound();
-
-            return NoContent();
         }
 
         [HttpPut("mark-delivered/{id}")]
@@ -59,9 +54,35 @@ namespace Backend.Controllers
             var order = await _orderService.MarkAsDelivered(id);
             if (order == null)
             {
+                return NotFound("Order not found.");
+            }
+            return Ok(order); // Return the updated order details
+        }
+
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelOrder(string id)
+        {
+            // Cancel the order and retrieve the updated order
+            var canceledOrder = await _orderService.CancelOrder(id);
+            
+            if (canceledOrder == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok(canceledOrder); // Return the canceled order details
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(string id)
+        {
+            var isDeleted = await _orderService.DeleteOrder(id);
+            if (!isDeleted)
+            {
                 return NotFound();
             }
-            return Ok(order);
+            return NoContent(); // 204 No Content
         }
 
         [HttpGet("customer/{customerId}")]

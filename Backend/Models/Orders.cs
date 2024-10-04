@@ -6,13 +6,19 @@ namespace Backend.Models
     public class Order
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
+        
         public string CustomerId { get; set; }
+
+        public string CustomerEmail { get; set; }
         public string VendorId { get; set; }
         public List<string> ProductIds { get; set; }
         public string Status { get; set; } // e.g., "Processing", "Delivered"
         public DateTime OrderDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
-        public List<string> Notes { get; set; } // For cancellation notes
+        
+        // Notes for delivery instructions, such as "pack as gift"
+        public string? Note { get; set; } 
     }
 }
