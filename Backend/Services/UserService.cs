@@ -66,6 +66,7 @@ public class UserService : IUserService
             PasswordHash = _passwordHasher.Hash(password),
             Role = role,
             IsApproved = role == "Customer" ? false : true, // Only unapproved for "Customer" role
+            Status = true,
             Address = address,
             MobileNumber = mobileNumber,
             VendorDetails = role == "Vendor" ? new Vendor() : null // Set Vendor details if role is Vendor
@@ -216,4 +217,24 @@ public class UserService : IUserService
 
         return null; // Return null if the update failed
     }
+
+ public async Task<User> UpdateUserStatus(string userId, bool status)
+{
+      
+    var update = Builders<User>.Update.Set(u => u.Status, status);
+
+    // Update the user status
+     var result = await _users.UpdateOneAsync(u => u.Id == userId, update);
+    
+    // Check if the user was modified
+    if (result.ModifiedCount > 0)
+    {
+        // If modified, retrieve the updated user
+        var updatedUser = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        return updatedUser; // Return the updated user object
+    }
+
+    return null; // Return null if the user was not found or not modified
+}
+
 }

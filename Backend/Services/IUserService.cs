@@ -31,4 +31,6 @@ public interface IUserService
 
     Task NotifyCsrForApproval(User newUser);
 
+   Task<User> UpdateUserStatus(string userId, bool status);
+
 }

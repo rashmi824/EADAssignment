@@ -22,4 +22,6 @@ public class User
     public bool? IsApproved { get; set; } // Null for non-Customer roles, false for unapproved customers
 
     public Vendor? VendorDetails { get; set; } // Nested Vendor details, null for non-Vendor users
+
+    public bool? Status { get; set; } // Active or Inactive
 }

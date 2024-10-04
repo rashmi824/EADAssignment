@@ -36,18 +36,29 @@ public class UsersController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
+        // Authenticate user and retrieve user details and tokens
         var (user, jwtToken, refreshToken) = await _userService.Authenticate(dto.Email, dto.Password, dto.Role);
-        if (user == null) return Unauthorized("Invalid credentials");
+        
+        // Check if the user exists
+        if (user == null)
+            return Unauthorized("Invalid credentials");
 
         // Check if the user is a customer and whether their account is approved
-        // Check if the user is a customer and whether their account is approved
-    if (user.Role == "Customer" && (user.IsApproved ?? false) == false)
-    {
-        return Unauthorized("Your account is pending approval from CSR.");
-    }
+        if (user.Role == "Customer")
+        {
+            if (!(user.IsApproved ?? false))
+            {
+                return Unauthorized("Your account is pending approval from CSR.");
+            }
+            
+            if (!(user.Status ?? false))
+            {
+                return Unauthorized("Your account has been deactivated.");
+            }
+        }
 
-
-        return Ok(new { token = jwtToken, refreshToken }); // Return both tokens
+        // Return JWT and refresh tokens upon successful login
+        return Ok(new { token = jwtToken, refreshToken });
     }
 
     
@@ -62,7 +73,8 @@ public class UsersController : ControllerBase
 
         var result = await _userService.ApproveCustomer(customerId, isApproved);
         if (!result)
-            return NotFound("Customer not found or update failed.");
+        
+            return NotFound("Customer not found or already " + (isApproved ? "approved." : "disapproved."));
 
         return Ok(isApproved ? "Customer approved successfully." : "Customer disapproved successfully.");
     }
@@ -76,6 +88,28 @@ public class UsersController : ControllerBase
 
         return Ok(user);
     }
+
+    
+    [HttpGet("user-id")] // Ensure the route is defined
+    public IActionResult GetUserIdFromToken([FromHeader(Name = "Authorization")] string jwtToken)
+    {
+        // Remove "Bearer " prefix if it exists
+        if (jwtToken.StartsWith("Bearer "))
+        {
+            jwtToken = jwtToken.Substring("Bearer ".Length).Trim();
+        }
+
+        // Use the JWT service to get the user ID
+        var userId = _jwtService.GetUserIdFromJwt(jwtToken);
+
+        if (userId == null)
+        {
+            return Unauthorized("Invalid token.");
+        }
+
+        return Ok(new { UserId = userId });
+    }
+
 
     // Get all users
     [HttpGet]
@@ -117,6 +151,36 @@ public class UsersController : ControllerBase
         return Ok("Logged out successfully.");
     }
 
+    // Activate a user
+[HttpPut("activate/{id}")]
+public async Task<IActionResult> ActivateUser(string id)
+{
+    var updatedUser = await _userService.UpdateUserStatus(id, true); // Assuming UpdateUserStatus is implemented
+    if (updatedUser != null)
+    {
+        return Ok(new 
+        { 
+            Message = "User activated successfully.",
+            User = updatedUser // Return the updated user object
+        });
+    }
+    return NotFound(new { Message = "User not found or User already Activated" });
+}
 
+// Deactivate a user
+[HttpPut("deactivate/{id}")]
+public async Task<IActionResult> DeactivateUser(string id)
+{
+    var updatedUser = await _userService.UpdateUserStatus(id, false); // Assuming UpdateUserStatus is implemented
+    if (updatedUser != null)
+    {
+        return Ok(new 
+        { 
+            Message = "User deactivated successfully.",
+            User = updatedUser // Return the updated user object
+        });
+    }
+    return NotFound(new { Message = "User not found or User Already Deactivated" });
+}
 
 }

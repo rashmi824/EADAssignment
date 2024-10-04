@@ -69,6 +69,18 @@ namespace Backend
                             options.AddPolicy("Vendor", policy => policy.RequireRole("Vendor"));
                         });
 
+                        // Add CORS
+                        services.AddCors(options =>
+                        {
+                            options.AddPolicy("AllowReactApp", builder =>
+                            {
+                                builder.WithOrigins("http://localhost:3000") // React app URL
+                                       .AllowAnyHeader()
+                                       .AllowAnyMethod()
+                                       .AllowCredentials(); // Allow cookies and authorization headers
+                            });
+                        });
+
                         // Add MVC controllers
                         services.AddControllers();
                     });
@@ -92,6 +104,7 @@ namespace Backend
 
                         app.UseRouting();
 
+                        app.UseCors("AllowReactApp"); // Enable CORS
                         app.UseAuthentication(); // Enable authentication middleware
                         app.UseAuthorization();  // Enable authorization middleware
 

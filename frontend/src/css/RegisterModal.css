@@ -1,0 +1,87 @@
+.register-modal {
+  max-width: 500px; /* Limit the width */
+  width: 100%; /* Full width on smaller screens */
+  background-color: #ffffff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  padding: 20px; /* Padding for the modal */
+
+}
+
+/* RegisterModal.css */
+.register-modal {
+    /* Add fixed position to center the modal */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050; /* Ensure it's above other elements */
+  }
+  
+  /* Overlay styles */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+    z-index: 1040; /* Below the modal */
+  }
+  
+
+.register-modal-header {
+  background-color: #007bff; /* Header color */
+  color: white; /* Text color in header */
+  margin-bottom: 10px; /* Space below header */
+    padding: 10px; /* Padding inside header */
+}
+
+.register-modal-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-form-group {
+  margin-bottom: 15px; /* Space between form groups */
+}
+
+.register-form-label {
+  display: block; /* Block display for labels */
+  margin-bottom: 5px; /* Space below labels */
+}
+
+.register-form-control {
+  width: 95%; /* Full width for inputs */
+  padding: 10px; /* Padding inside inputs */
+  border: 1px solid #ccc; /* Border for inputs */
+  border-radius: 4px; /* Rounded corners for inputs */
+}
+
+.register-form-control:focus {
+  outline: none; /* Remove focus outline */
+  border-color: #007bff; /* Focus border color */
+}
+
+.register-form-control select {
+    width: 500px !important; /* Full width for select dropdown */
+    }
+
+.register-error {
+  color: red; /* Error message color */
+  font-size: 0.9em; /* Smaller font for error messages */
+}
+
+.register-btn {
+  padding: 10px 15px; /* Padding for buttons */
+}
+
+.register-btn-success {
+  background-color: #28a745; /* Green button */
+  color: white; /* Text color for success button */
+}
+
+.register-btn-danger {
+  background-color: #dc3545; /* Red button */
+  color: white; /* Text color for danger button */
+}
