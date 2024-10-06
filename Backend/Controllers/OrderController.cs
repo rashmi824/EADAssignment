@@ -1,83 +1,109 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Backend.Data;
+using Backend.Dtos;
 
-[ApiController]
-[Route("api/[controller]")]
-public class OrdersController : ControllerBase
+namespace Backend.Controllers
 {
-    private readonly IOrderService _orderService;
-
-    public OrdersController(IOrderService orderService)
+    [ApiController]
+    [Route("api/orders")]
+    public class OrderController : ControllerBase
     {
-        _orderService = orderService;
-    }
+        private readonly IOrderService _orderService;
 
-    // GET: api/orders
-    [HttpGet]
-    public async Task<ActionResult<List<Order>>> GetOrders()
-    {
-        var orders = await _orderService.GetOrdersAsync();
-        return Ok(orders);
-    }
-
-    // GET: api/orders/{id}
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Order>> GetOrderById(string id)
-    {
-        var order = await _orderService.GetOrderByIdAsync(id);
-        if (order == null)
+        public OrderController(IOrderService orderService)
         {
-            return NotFound();
-        }
-        return Ok(order);
-    }
-
-    // POST: api/orders
-
-    [HttpPost]
-    public async Task<ActionResult<Order>> CreateOrder(Order newOrder)
-    {
-        var order = await _orderService.CreateOrderAsync(newOrder);
-        return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order);
-    }
-
-
-    // PUT: api/orders/{id}
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateOrder(string id, [FromBody] Order updatedOrder)
-    {
-        var existingOrder = await _orderService.GetOrderByIdAsync(id);
-        if (existingOrder == null)
-        {
-            return NotFound();
+            _orderService = orderService;
         }
 
-        updatedOrder.Id = existingOrder.Id; // Ensure ID remains the same
-        var result = await _orderService.UpdateOrderAsync(id, updatedOrder);
-        if (!result)
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderDto orderDto)
         {
-            return StatusCode(500, "Failed to update order");
-        }
-        return NoContent();
-    }
-
-    // DELETE: api/orders/{id}
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteOrder(string id)
-    {
-        var order = await _orderService.GetOrderByIdAsync(id);
-        if (order == null)
-        {
-            return NotFound();
+            var order = await _orderService.CreateOrder(orderDto);
+            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order); // Return ObjectId as string
         }
 
-        var result = await _orderService.DeleteOrderAsync(id);
-        if (!result)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrderById(string id)
         {
-            return StatusCode(500, "Failed to delete order");
+            var order = await _orderService.GetOrderById(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return Ok(order);
         }
-        return NoContent();
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(string id, [FromBody] OrderDto orderDto)
+        {
+            if (orderDto == null)
+            {
+                return BadRequest("Order data is required.");
+            }
+
+            var order = await _orderService.UpdateOrder(id, orderDto);
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+            return Ok(order);
+        }
+
+        [HttpPut("mark-delivered/{id}")]
+        public async Task<IActionResult> MarkAsDelivered(string id)
+        {
+            var order = await _orderService.MarkAsDelivered(id);
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+            return Ok(order); // Return the updated order details
+        }
+
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelOrder(string id)
+        {
+            // Cancel the order and retrieve the updated order
+            var canceledOrder = await _orderService.CancelOrder(id);
+            
+            if (canceledOrder == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok(canceledOrder); // Return the canceled order details
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(string id)
+        {
+            var isDeleted = await _orderService.DeleteOrder(id);
+            if (!isDeleted)
+            {
+                return NotFound();
+            }
+            return NoContent(); // 204 No Content
+        }
+
+        [HttpGet("customer/{customerId}")]
+        public async Task<IActionResult> GetOrdersByCustomerId(string customerId)
+        {
+            var orders = await _orderService.GetOrdersByCustomerId(customerId);
+            return Ok(orders);
+        }
+
+        [HttpGet("vendor/{vendorId}")]
+        public async Task<IActionResult> GetOrdersByVendorId(string vendorId)
+        {
+            var orders = await _orderService.GetOrdersByVendorId(vendorId);
+            return Ok(orders);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _orderService.GetAllOrders();
+            return Ok(orders);
+        }
     }
 }

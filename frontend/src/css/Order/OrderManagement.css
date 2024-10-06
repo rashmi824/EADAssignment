@@ -1,0 +1,21 @@
+/* OrderManagement.css */
+.container {
+    max-width: 800px; /* Limit the width of the container */
+  }
+  
+  .card {
+    margin-top: 20px; /* Add some margin on top */
+  }
+  
+  .btn {
+    margin: 5px; /* Add some spacing between buttons */
+  }
+  
+  .card-title {
+    font-weight: bold; /* Make the title bold */
+  }
+  
+  .card-text {
+    font-size: 1.2em; /* Slightly increase the font size */
+  }
+  

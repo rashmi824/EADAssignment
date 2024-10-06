@@ -1,75 +1,33 @@
-import React, { useState, useEffect } from "react";
-import OrderList from "./OrderList";
+import React from "react";
+import { Link } from "react-router-dom"; // Link for navigation
+import "../css/Order/OrderManagement.css"; // Ensure you have appropriate styles
 
-const OrderManagement = () => {
-  const [orders, setOrders] = useState([]);
-  const [order, setOrder] = useState({ status: "Processing", notes: "" }); // Default status
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
-    try {
-      const response = await fetch("http://localhost:5266/api/orders"); // Adjust to your backend API endpoint
-      if (!response.ok) {
-        throw new Error("Failed to fetch orders");
-      }
-      const data = await response.json();
-      setOrders(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setOrder({ ...order, [name]: value });
-  };
-
-  const createOrder = async () => {
-    try {
-      const response = await fetch("http://localhost:5266/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(order),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to create order");
-      }
-      setOrder({ status: "Processing", notes: "" }); // Reset form to default values
-      fetchOrders(); // Refresh orders list
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
+function OrderManagement() {
   return (
-    <div>
-      <h2>Create Order</h2>
-      {error && <div style={{ color: "red" }}>Error: {error}</div>}
-      <select name="status" value={order.status} onChange={handleInputChange}>
-        <option value="Processing">Processing</option>
-        <option value="Shipped">Shipped</option>
-        <option value="Delivered">Delivered</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
-      <input
-        type="text"
-        name="notes"
-        placeholder="Order Notes"
-        value={order.notes}
-        onChange={handleInputChange}
-      />
-      <button onClick={createOrder}>Submit Order</button>
-
-      <h2>Order List</h2>
-      <OrderList orders={orders} />
+    <div className="container mt-4">
+      <h2 className="text-center mb-4">Order Management System</h2>
+      <div className="text-center mb-4">
+        <Link to="/orders" className="btn btn-secondary mx-2">
+          View Orders
+        </Link>
+        <Link to="/create-order" className="btn btn-primary mx-2">
+          Create New Order
+        </Link>
+        {/* Add more links or buttons for other functionalities as needed */}
+      </div>
+      <div className="card text-center">
+        <div className="card-body">
+          <h5 className="card-title">
+            Welcome to the Order Management Dashboard
+          </h5>
+          <p className="card-text">
+            Here you can manage your orders efficiently. Use the buttons above
+            to navigate to the relevant sections.
+          </p>
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default OrderManagement;
