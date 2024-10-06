@@ -18,7 +18,7 @@ public interface IUserService
     Task<IEnumerable<User>> GetAllUsers();
 
     // Update user information
-    Task<bool> UpdateUser(string userId, User updatedUser);
+    Task<bool> UpdateUser(string userId, string email = null, string username = null, string password = null, string role = null, string address = null, int? mobileNumber = null);
 
     // Delete a user by ID
     Task<bool> DeleteUser(string userId);

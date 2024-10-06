@@ -3,6 +3,8 @@ import axios from "axios";
 import "../css/Auth.css";
 import Logo from "../images/style.jpg";
 import fashion from "../images/online-shopping.png";
+import swal from "sweetalert";
+
 const AuthPage = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,7 +36,7 @@ const AuthPage = () => {
             mobileNumber: formData.mobileNumber,
           }
         );
-        alert(response.data); // Success message from the server
+        swal(response.data); // Success message from the server
       } else {
         const response = await axios.post(
           "http://localhost:5266/api/users/login",
@@ -70,15 +72,14 @@ const AuthPage = () => {
         setUserDetails(userResponse.data);
         localStorage.setItem("user", JSON.stringify(userResponse.data));
 
-        alert("Login successful! Tokens received.");
+        swal("Login successful! Tokens received.");
 
         // Redirect based on role
-
         window.location.href = "/dashboard";
       }
     } catch (error) {
       if (error.response) {
-        alert(error.response.data); // Display server error message
+        swal(error.response.data); // Display server error message
       } else {
         alert("An error occurred, please try again.");
       }

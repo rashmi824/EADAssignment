@@ -121,13 +121,23 @@ public class UsersController : ControllerBase
 
     // Update user information
     [HttpPut("{userId}")]
-    public async Task<IActionResult> UpdateUser(string userId, [FromBody] User updatedUser)
+    public async Task<IActionResult> UpdateUser(string userId, [FromBody] RegisterDto userUpdateDto)
     {
-        var result = await _userService.UpdateUser(userId, updatedUser);
-        if (!result) return NotFound("User not found");
+        var result = await _userService.UpdateUser(
+            userId,
+            email: userUpdateDto.Email,
+            username: userUpdateDto.Username,
+            password: userUpdateDto.Password,
+            role: userUpdateDto.Role,
+            address: userUpdateDto.Address,
+            mobileNumber: userUpdateDto.MobileNumber
+        );
+
+        if (!result) return NotFound("User not found or email already exists.");
 
         return Ok("User updated successfully.");
     }
+
 
     // Delete a user
     [HttpDelete("{userId}")]
