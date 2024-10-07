@@ -22,75 +22,77 @@ function App() {
   const retrievedUser = JSON.parse(localStorage.getItem("user"));
   const role = retrievedUser?.role; // Use optional chaining to avoid errors if user is null
 
-  // Redirect if no role is defined
-  if (!role) {
-    return <Navigate to="/" />;
-  }
-
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/" element={<AuthPage />} />
-          {/* <Route path="/profile" element={<VendorProfile userId={retrievedUser.id} />} /> */}
-          <Route path="/orders/:id" element={<OrderDetails />} />
-          <Route path="/orders" element={<OrderList />} />
-          <Route path="/OrderHomePage" element={<OrderManagement />} />
-          <Route path="/create-order" element={<OrderForm />} />
-          <Route path="/update-order/:id" element={<UpdateOrder />} />
 
-          {/* Dashboard route with nested routes */}
-          <Route path="/dashboard" element={<Dashboard />}>
-            {/* Conditionally render the nested routes based on the user's role */}
-            {role === "Administrator" || role === "CSR" ? (
-              <>
-                <Route
-                  path="customer-management"
-                  element={<CustomerManagement />}
-                />
-                <Route
-                  path="vendor-management"
-                  element={<VendorManagement />}
-                />
-                <Route
-                  path="profile"
-                  element={<VendorProfile userId={retrievedUser.id} />}
-                />
+          {/* Redirect if no role is defined */}
+          {role ? (
+            <>
+              <Route path="/orders/:id" element={<OrderDetails />} />
+              <Route path="/orders" element={<OrderList />} />
+              <Route path="/OrderHomePage" element={<OrderManagement />} />
+              <Route path="/create-order" element={<OrderForm />} />
+              <Route path="/update-order/:id" element={<UpdateOrder />} />
 
-                {/* Order-related routes */}
-                <Route path="orders/:id" element={<OrderDetails />} />
-                <Route path="orders" element={<OrderList />} />
-                <Route path="OrderHomePage" element={<OrderManagement />} />
-                <Route path="create-order" element={<OrderForm />} />
-                <Route path="update-order/:id" element={<UpdateOrder />} />
-              </>
-            ) : null}
+              {/* Dashboard route with nested routes */}
+              <Route path="/dashboard" element={<Dashboard />}>
+                {/* Conditionally render the nested routes based on the user's role */}
+                {role === "Administrator" || role === "CSR" ? (
+                  <>
+                    <Route
+                      path="customer-management"
+                      element={<CustomerManagement />}
+                    />
+                    <Route
+                      path="vendor-management"
+                      element={<VendorManagement />}
+                    />
+                    <Route
+                      path="profile"
+                      element={<VendorProfile userId={retrievedUser.id} />}
+                    />
 
-            {/* Admin-specific routes */}
-            {role === "Administrator" && (
-              <>{/* Uncomment and add admin-specific routes here */}</>
-            )}
+                    {/* Order-related routes */}
+                    <Route path="orders/:id" element={<OrderDetails />} />
+                    <Route path="orders" element={<OrderList />} />
+                    <Route path="OrderHomePage" element={<OrderManagement />} />
+                    <Route path="create-order" element={<OrderForm />} />
+                    <Route path="update-order/:id" element={<UpdateOrder />} />
+                  </>
+                ) : null}
 
-            {/* Vendor-specific routes */}
-            {role === "Vendor" && (
-              <>
-                <Route
-                  path="profile"
-                  element={<VendorProfile userId={retrievedUser.id} />}
-                />
-                <Route path="orders/:id" element={<OrderDetails />} />
-                <Route path="orders" element={<OrderList />} />
-                <Route path="OrderHomePage" element={<OrderManagement />} />
-                <Route path="create-order" element={<OrderForm />} />
-                <Route path="update-order/:id" element={<UpdateOrder />} />
-              </>
-            )}
+                {/* Admin-specific routes */}
+                {role === "Administrator" && (
+                  <>{/* Uncomment and add admin-specific routes here */}</>
+                )}
 
-            {/* CSR-specific routes */}
-            {role === "CSR" && (
-              <>{/* Uncomment and add CSR-specific routes here */}</>
-            )}
-          </Route>
+                {/* Vendor-specific routes */}
+                {role === "Vendor" && (
+                  <>
+                    <Route
+                      path="profile"
+                      element={<VendorProfile userId={retrievedUser.id} />}
+                    />
+                    <Route path="orders/:id" element={<OrderDetails />} />
+                    <Route path="orders" element={<OrderList />} />
+                    <Route path="OrderHomePage" element={<OrderManagement />} />
+                    <Route path="create-order" element={<OrderForm />} />
+                    <Route path="update-order/:id" element={<UpdateOrder />} />
+                  </>
+                )}
+
+                {/* CSR-specific routes */}
+                {role === "CSR" && (
+                  <>{/* Uncomment and add CSR-specific routes here */}</>
+                )}
+              </Route>
+            </>
+          ) : (
+            <Route path="*" element={<Navigate to="/" />} />
+          )}
         </Routes>
       </div>
     </Router>
