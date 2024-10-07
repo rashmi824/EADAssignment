@@ -63,7 +63,7 @@ function OrderList() {
   };
 
   const goToUpdateOrder = (id) => {
-    navigate(`/update-order/${id}`); // Navigate to UpdateOrder page
+    navigate(`/dashboard/update-order/${id}`); // Navigate to UpdateOrder page
   };
 
   return (

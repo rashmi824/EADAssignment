@@ -155,93 +155,86 @@ function VendorManagement() {
   );
 
   return (
-    <div
-      className={`unique-main-container ${showRegisterUserModal ? "blur" : ""}`}
-    >
-      {/* Register Modal */}
+    <div className="unique-content">
       <RegisterModal
         show={showRegisterUserModal}
         handleClose={handleRegisterUserModalClose}
         setIsUserRegistered={setIsUserRegistered}
       />
-      <div className="dashboard-content">
-        <div className="unique-content">
-          <div className="unique-search-bar">
-            <input
-              type="text"
-              className="unique-search-input"
-              placeholder="Search Users..."
-              value={search}
-              onChange={handleSearch}
-            />
-            <button
-              className="unique-btn unique-btn-primary"
-              onClick={handleRegisterUserModalShow}
-            >
-              Register New Vendor
-            </button>
-          </div>
+      <div className="unique-search-bar">
+        <input
+          type="text"
+          className="unique-search-input"
+          placeholder="Search Users..."
+          value={search}
+          onChange={handleSearch}
+        />
+        <button
+          className="unique-btn unique-btn-primary"
+          onClick={handleRegisterUserModalShow}
+        >
+          Register New Vendor
+        </button>
+      </div>
 
-          <div className="user-header">
-            <h2 className="unique-content-title">Vendor Management</h2>
-          </div>
-          <div className="unique-table-container">
-            <table className="unique-user-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Address</th>
-                  <th>Mobile Number</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user, index) => (
-                  <tr key={user._id}>
-                    <td>{index + 1}</td>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.address}</td>
-                    <td>{user.mobileNumber}</td>
+      <div className="user-header">
+        <h2 className="unique-content-title">Vendor Management</h2>
+      </div>
+      <div className="unique-table-container">
+        <table className="unique-user-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Mobile Number</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.map((user, index) => (
+              <tr key={user._id}>
+                <td>{index + 1}</td>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>{user.address}</td>
+                <td>{user.mobileNumber}</td>
 
-                    <td>{user.status === true ? "Active" : "Deactive"}</td>
+                <td>{user.status === true ? "Active" : "Deactive"}</td>
 
-                    <td>
-                      <button
-                        className="unique-btn unique-btn-1"
-                        onClick={() => Activate(user.id)}
-                      >
-                        Activate
-                      </button>
+                <td>
+                  <button
+                    className="unique-btn unique-btn-1"
+                    onClick={() => Activate(user.id)}
+                  >
+                    Activate
+                  </button>
 
-                      <button
-                        className="unique-btn unique-btn-2"
-                        onClick={() => Deactivate(user.id)}
-                      >
-                        Deactivate
-                      </button>
-                      <button
-                        className="unique-btn unique-btn-success"
-                        onClick={() => handleRegisterUserModalShow(user.id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="unique-btn unique-btn-danger"
-                        onClick={() => deleteUser(user.id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  <button
+                    className="unique-btn unique-btn-2"
+                    onClick={() => Deactivate(user.id)}
+                  >
+                    Deactivate
+                  </button>
+                  <button
+                    className="unique-btn unique-btn-success"
+                    onClick={() => handleRegisterUserModalShow(user.id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="unique-btn unique-btn-danger"
+                    onClick={() => deleteUser(user.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

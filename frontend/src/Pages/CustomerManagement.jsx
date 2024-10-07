@@ -162,147 +162,139 @@ function CustomerManagement() {
   );
 
   return (
-    <div
-      className={`unique-main-container ${showRegisterUserModal ? "blur" : ""}`}
-    >
+    <div className="unique-content">
       {/* Register Modal */}
       <RegisterModal
         show={showRegisterUserModal}
         handleClose={handleRegisterUserModalClose}
         setIsUserRegistered={setIsUserRegistered}
       />
-      <div className="dashboard-content">
-        <div className="unique-content">
-          <div className="unique-search-bar">
-            <input
-              type="text"
-              className="unique-search-input"
-              placeholder="Search Users..."
-              value={search}
-              onChange={handleSearch}
-            />
-          </div>
+      <div className="unique-search-bar">
+        <input
+          type="text"
+          className="unique-search-input"
+          placeholder="Search Users..."
+          value={search}
+          onChange={handleSearch}
+        />
+      </div>
 
-          <div className="user-header">
-            <h2 className="unique-content-title">Customer Management</h2>
+      <div className="user-header">
+        <h2 className="unique-content-title">Customer Management</h2>
 
-            <div className="tabs-container">
-              <button
-                className={`tab-btn ${activeTab === "new" ? "active" : ""}`}
-                onClick={() => setActiveTab("new")}
-              >
-                New Customers
-              </button>
-              <button
-                className={`tab-btn ${activeTab === "active" ? "active" : ""}`}
-                onClick={() => setActiveTab("active")}
-              >
-                Active Customers
-              </button>
-              <button
-                className={`tab-btn ${activeTab === "Reject" ? "active" : ""}`}
-                onClick={() => setActiveTab("Reject")}
-              >
-                Rejected Customers
-              </button>
-              <button
-                className={`tab-btn ${
-                  activeTab === "Inactive" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("Inactive")}
-              >
-                InActive Customers
-              </button>
-            </div>
-
-            <h2 className="unique-content-title">
-              {activeTab === "new"
-                ? "New Customers"
-                : activeTab === "active"
-                ? "Active Customers"
-                : activeTab === "Reject"
-                ? "Rejected Customers"
-                : "Inactive Customers"}
-            </h2>
-          </div>
-          <div className="unique-table-container">
-            <table className="unique-user-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Address</th>
-                  <th>Mobile Number</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user, index) => (
-                  <tr key={user._id}>
-                    <td>{index + 1}</td>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.address}</td>
-                    <td>{user.mobileNumber}</td>
-
-                    <td>{user.status === true ? "Active" : "Deactive"}</td>
-
-                    <td>
-                      {activeTab === "new" || activeTab === "Reject" ? (
-                        <>
-                          <button
-                            className="unique-btn unique-btn-success"
-                            onClick={() => Approve(user.id)}
-                          >
-                            Approve
-                          </button>
-                          <button
-                            className="unique-btn unique-btn-danger"
-                            onClick={() => disApprove(user.id)}
-                          >
-                            Reject
-                          </button>
-                        </>
-                      ) : activeTab === "Inactive" ? (
-                        <>
-                          <button
-                            className="unique-btn unique-btn-1"
-                            onClick={() => Activate(user.id)}
-                          >
-                            Activate
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            className="unique-btn unique-btn-2"
-                            onClick={() => Deactivate(user.id)}
-                          >
-                            Deactivate
-                          </button>
-                          <button
-                            className="unique-btn unique-btn-success"
-                            onClick={() => handleRegisterUserModalShow(user.id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="unique-btn unique-btn-danger"
-                            onClick={() => deleteUser(user.id)}
-                          >
-                            Delete
-                          </button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="tabs-container">
+          <button
+            className={`tab-btn ${activeTab === "new" ? "active" : ""}`}
+            onClick={() => setActiveTab("new")}
+          >
+            New Customers
+          </button>
+          <button
+            className={`tab-btn ${activeTab === "active" ? "active" : ""}`}
+            onClick={() => setActiveTab("active")}
+          >
+            Active Customers
+          </button>
+          <button
+            className={`tab-btn ${activeTab === "Reject" ? "active" : ""}`}
+            onClick={() => setActiveTab("Reject")}
+          >
+            Rejected Customers
+          </button>
+          <button
+            className={`tab-btn ${activeTab === "Inactive" ? "active" : ""}`}
+            onClick={() => setActiveTab("Inactive")}
+          >
+            InActive Customers
+          </button>
         </div>
+
+        <h2 className="unique-content-title">
+          {activeTab === "new"
+            ? "New Customers"
+            : activeTab === "active"
+            ? "Active Customers"
+            : activeTab === "Reject"
+            ? "Rejected Customers"
+            : "Inactive Customers"}
+        </h2>
+      </div>
+      <div className="unique-table-container">
+        <table className="unique-user-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Mobile Number</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.map((user, index) => (
+              <tr key={user._id}>
+                <td>{index + 1}</td>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>{user.address}</td>
+                <td>{user.mobileNumber}</td>
+
+                <td>{user.status === true ? "Active" : "Deactive"}</td>
+
+                <td>
+                  {activeTab === "new" || activeTab === "Reject" ? (
+                    <>
+                      <button
+                        className="unique-btn unique-btn-success"
+                        onClick={() => Approve(user.id)}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="unique-btn unique-btn-danger"
+                        onClick={() => disApprove(user.id)}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  ) : activeTab === "Inactive" ? (
+                    <>
+                      <button
+                        className="unique-btn unique-btn-1"
+                        onClick={() => Activate(user.id)}
+                      >
+                        Activate
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="unique-btn unique-btn-2"
+                        onClick={() => Deactivate(user.id)}
+                      >
+                        Deactivate
+                      </button>
+                      <button
+                        className="unique-btn unique-btn-success"
+                        onClick={() => handleRegisterUserModalShow(user.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="unique-btn unique-btn-danger"
+                        onClick={() => deleteUser(user.id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
