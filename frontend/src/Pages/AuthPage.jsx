@@ -4,6 +4,12 @@ import "../css/Auth.css";
 import Logo from "../images/style.jpg";
 import fashion from "../images/online-shopping.png";
 import swal from "sweetalert";
+import {
+ 
+  Navigate,
+} from "react-router-dom";
+
+
 
 const AuthPage = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -37,6 +43,8 @@ const AuthPage = () => {
           }
         );
         swal(response.data); // Success message from the server
+
+        Navigate("/");
       } else {
         const response = await axios.post(
           "http://localhost:5266/api/users/login",
@@ -75,7 +83,7 @@ const AuthPage = () => {
         swal("Login successful! Tokens received.");
 
         // Redirect based on role
-        window.location.href = "/dashboard";
+        Navigate("/dashboard");
       }
     } catch (error) {
       if (error.response) {

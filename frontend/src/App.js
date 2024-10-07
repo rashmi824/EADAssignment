@@ -17,9 +17,7 @@ import CustomerManagement from "./Pages/CustomerManagement";
 import VendorManagement from "./Pages/VendorManagement";
 import VendorProfile from "./Pages/VendorProfile";
 import UpdateOrder from "./components/UpdateOrder";
-//import InventoryManagement from "./Pages/InventoryManagement"; // Assuming this component exists
-//import ProductCRUD from "./Pages/ProductCRUD"; // Assuming this component exists
-//import OrderStatus from "./Pages/OrderStatus"; // Assuming this component exists
+
 function App() {
   const retrievedUser = JSON.parse(localStorage.getItem("user"));
   const role = retrievedUser?.role; // Use optional chaining to avoid errors if user is null
@@ -54,31 +52,44 @@ function App() {
                   path="vendor-management"
                   element={<VendorManagement />}
                 />
-                <Route path="order" element={<OrderManagement />} />
                 <Route
                   path="profile"
                   element={<VendorProfile userId={retrievedUser.id} />}
                 />
+
+                {/* Order-related routes */}
+                <Route path="orders/:id" element={<OrderDetails />} />
+                <Route path="orders" element={<OrderList />} />
+                <Route path="OrderHomePage" element={<OrderManagement />} />
+                <Route path="create-order" element={<OrderForm />} />
+                <Route path="update-order/:id" element={<UpdateOrder />} />
               </>
             ) : null}
 
             {/* Admin-specific routes */}
             {role === "Administrator" && (
-              <>{/* Uncomment and add your routes here */}</>
+              <>{/* Uncomment and add admin-specific routes here */}</>
             )}
 
             {/* Vendor-specific routes */}
             {role === "Vendor" && (
               <>
-                 <Route
-                  path="/profile"
+                <Route
+                  path="profile"
                   element={<VendorProfile userId={retrievedUser.id} />}
                 />
+                <Route path="orders/:id" element={<OrderDetails />} />
+                <Route path="orders" element={<OrderList />} />
+                <Route path="OrderHomePage" element={<OrderManagement />} />
+                <Route path="create-order" element={<OrderForm />} />
+                <Route path="update-order/:id" element={<UpdateOrder />} />
               </>
             )}
 
             {/* CSR-specific routes */}
-            {role === "CSR" && <>{/* Uncomment and add your routes here */}</>}
+            {role === "CSR" && (
+              <>{/* Uncomment and add CSR-specific routes here */}</>
+            )}
           </Route>
         </Routes>
       </div>

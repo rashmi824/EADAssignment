@@ -55,7 +55,7 @@ const Sidebar = ({ role }) => {
             <>
               <li>
                 <a href="/dashboard/product-management" className="nav-link">
-                  Product Activation/Deactivation
+                  Product Management
                 </a>
               </li>
               <li>
@@ -69,8 +69,8 @@ const Sidebar = ({ role }) => {
                 </a>
               </li>
               <li>
-                <a href="/dashboard/order" className="nav-link">
-                  Order Status
+                <a href="/dashboard/orderHomePage" className="nav-link">
+                  Order Management
                 </a>
               </li>
               <li>
@@ -84,12 +84,12 @@ const Sidebar = ({ role }) => {
             <>
               <li>
                 <a href="/dashboard/product-management" className="nav-link">
-                  Product CRUD
+                  Product Management
                 </a>
               </li>
               <li>
-                <a href="/dashboard/order-status" className="nav-link">
-                  Order Status
+                <a href="/dashboard/orderHomePage" className="nav-link">
+                  Order Management
                 </a>
               </li>
             </>
@@ -97,8 +97,8 @@ const Sidebar = ({ role }) => {
           {role === "CSR" && (
             <>
               <li>
-                <a href="/dashboard/order-status" className="nav-link">
-                  Order Status
+                <a href="/dashboard/orderHomePage" className="nav-link">
+                  Order Management
                 </a>
               </li>
               <li>
