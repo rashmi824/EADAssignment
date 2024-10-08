@@ -12,29 +12,32 @@ function CustomerManagement() {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("new");
 
-  // Fetch Users
+  // Fetch Users when component mounts or when isUserRegistered state changes
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("http://localhost:5266/api/users");
-        setUsers(response.data);
+        setUsers(response.data); // Set the users state with the fetched data
       } catch (error) {
         console.error("Error fetching users", error.response.data);
-        swal("Error fetching users", "Please try again later.", "error");
+        swal("Error fetching users", "Please try again later.", "error"); // Show error alert
       }
     };
     fetchUsers();
   }, [isUserRegistered]);
 
+  // Close the registration modal and reset registration state
   const handleRegisterUserModalClose = () => {
     setShowRegisterUserModal(false);
     setIsUserRegistered(false);
   };
 
+  // Show the registration modal
   const handleRegisterUserModalShow = () => {
     setShowRegisterUserModal(true);
   };
 
+  // Delete a user by their ID with a confirmation alert
   const deleteUser = (id) => {
     swal({
       title: "Are you sure?",
@@ -47,9 +50,9 @@ function CustomerManagement() {
         axios
           .delete(`http://localhost:5266/api/users/${id}`)
           .then(() => {
-            setIsUserRegistered(true);
-            swal("User deleted successfully!", "", "success");
-            window.location.reload();
+            setIsUserRegistered(true); // Trigger user re-fetch
+            swal("User deleted successfully!", "", "success"); // Show success alert
+            window.location.reload(); // Reload the page to update the user list
           })
           .catch((err) => {
             console.error(err);
@@ -57,14 +60,15 @@ function CustomerManagement() {
               "Error deleting user",
               "Please try again later.",
               err.response.data
-            );
+            ); // Show error alert
           });
       } else {
-        swal("Delete cancelled successfully!");
+        swal("Delete cancelled successfully!"); // Show cancellation alert
       }
     });
   };
 
+  // Approve a customer by their ID and activate them
   const Approve = (id) => {
     axios
       .put(`http://localhost:5266/api/users/approve-customer/${id}`, true, {
@@ -73,9 +77,8 @@ function CustomerManagement() {
         },
       })
       .then(() => {
-        //swal("User Approved successfully!", "", "success");
-        Activate(id);
-        window.location.reload();
+        Activate(id); // Activate the user after approval
+        window.location.reload(); // Reload the page to update the user list
       })
       .catch((err) => {
         console.error(err);
@@ -83,10 +86,11 @@ function CustomerManagement() {
           "Error Approving user",
           "Please try again later.",
           err.response.data
-        );
+        ); // Show error alert
       });
   };
 
+  // Disapprove a customer by their ID and deactivate them
   const disApprove = (id) => {
     axios
       .put(`http://localhost:5266/api/users/approve-customer/${id}`, false, {
@@ -95,9 +99,8 @@ function CustomerManagement() {
         },
       })
       .then(() => {
-        //swal("User Disapproved successfully!", "", "success");
-        Deactivate(id);
-        window.location.reload();
+        Deactivate(id); // Deactivate the user after disapproval
+        window.location.reload(); // Reload the page to update the user list
       })
       .catch((err) => {
         console.error(err);
@@ -105,16 +108,17 @@ function CustomerManagement() {
           "Error Disapproving user or User Already Disapproved",
           "Please try again later.",
           err.response.data
-        );
+        ); // Show error alert
       });
   };
 
+  // Activate a user by their ID
   const Activate = (id) => {
     axios
       .put(`http://localhost:5266/api/users/activate/${id}`)
       .then(() => {
-        swal("User Activated successfully!", "", "success");
-        window.location.reload();
+        swal("User Activated successfully!", "", "success"); // Show success alert
+        window.location.reload(); // Reload the page to update the user list
       })
       .catch((err) => {
         console.error(err);
@@ -122,16 +126,17 @@ function CustomerManagement() {
           "Error Activating user",
           "Please try again later.",
           err.response.data
-        );
+        ); // Show error alert
       });
   };
 
+  // Deactivate a user by their ID
   const Deactivate = (id) => {
     axios
       .put(`http://localhost:5266/api/users/deactivate/${id}`)
       .then(() => {
-        swal("User Deactivated successfully!", "", "success");
-        window.location.reload();
+        swal("User Deactivated successfully!", "", "success"); // Show success alert
+        window.location.reload(); // Reload the page to update the user list
       })
       .catch((err) => {
         console.error(err);
@@ -139,26 +144,27 @@ function CustomerManagement() {
           "Error Deactivating user",
           "Please try again later.",
           err.response.data
-        );
+        ); // Show error alert
       });
   };
 
+  // Handle search input change
   const handleSearch = (e) => {
-    setSearch(e.target.value);
+    setSearch(e.target.value); // Update search state
   };
 
-  // Filter users based on active tab and search input
+  // Filter users based on active tab, role, and search input
   const filteredUsers = users.filter(
     (user) =>
       user.role === "Customer" && // Filter by role
-      user.username?.toLowerCase().includes(search.toLowerCase()) && // Filter by search
+      user.username?.toLowerCase().includes(search.toLowerCase()) && // Filter by search input
       (activeTab === "new"
-        ? !user.isApproved && user.status
+        ? !user.isApproved && user.status // New customers
         : activeTab === "active"
-        ? user.isApproved && user.status
+        ? user.isApproved && user.status // Active customers
         : activeTab === "Reject"
-        ? !user.isApproved && !user.status
-        : user.isApproved && !user.status) // Filter by approval status based on tab
+        ? !user.isApproved && !user.status // Rejected customers
+        : user.isApproved && !user.status) // Inactive customers
   );
 
   return (
@@ -175,7 +181,7 @@ function CustomerManagement() {
           className="unique-search-input"
           placeholder="Search Users..."
           value={search}
-          onChange={handleSearch}
+          onChange={handleSearch} // Update search state on input change
         />
       </div>
 
@@ -183,6 +189,7 @@ function CustomerManagement() {
         <h2 className="unique-content-title">Customer Management</h2>
 
         <div className="tabs-container">
+          {/* Tab buttons for different customer categories */}
           <button
             className={`tab-btn ${activeTab === "new" ? "active" : ""}`}
             onClick={() => setActiveTab("new")}
@@ -205,10 +212,11 @@ function CustomerManagement() {
             className={`tab-btn ${activeTab === "Inactive" ? "active" : ""}`}
             onClick={() => setActiveTab("Inactive")}
           >
-            InActive Customers
+            Inactive Customers
           </button>
         </div>
 
+        {/* Display the title based on the active tab */}
         <h2 className="unique-content-title">
           {activeTab === "new"
             ? "New Customers"
@@ -271,18 +279,6 @@ function CustomerManagement() {
                   ) : (
                     <>
                       <button
-                        className="unique-btn unique-btn-2"
-                        onClick={() => Deactivate(user.id)}
-                      >
-                        Deactivate
-                      </button>
-                      <button
-                        className="unique-btn unique-btn-success"
-                        onClick={() => handleRegisterUserModalShow(user.id)}
-                      >
-                        Edit
-                      </button>
-                      <button
                         className="unique-btn unique-btn-danger"
                         onClick={() => deleteUser(user.id)}
                       >
@@ -295,6 +291,14 @@ function CustomerManagement() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="unique-add-user-btn-container">
+        <button
+          className="unique-btn unique-btn-add"
+          onClick={handleRegisterUserModalShow} // Show registration modal
+        >
+          Add User
+        </button>
       </div>
     </div>
   );

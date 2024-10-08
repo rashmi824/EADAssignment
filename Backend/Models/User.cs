@@ -1,3 +1,8 @@
+// User.cs
+// This class represents a user in the system with various properties related to their account, 
+// including personal information, role, approval status, and vendor details.
+// It is designed to be stored in a MongoDB database.
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 

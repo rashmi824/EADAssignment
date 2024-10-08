@@ -1,3 +1,8 @@
+/*
+ UsersController.cs
+ This file contains endpoints for user registration, login, approval, user management, and authentication.
+ */
+
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -9,20 +14,23 @@ public class UsersController : ControllerBase
     private readonly IUserService _userService;
     private readonly IJwtService _jwtService;
 
+    // Constructor to initialize user and JWT services
     public UsersController(IUserService userService, IJwtService jwtService)
     {
         _userService = userService;
         _jwtService = jwtService;
     }
 
-    // Registration endpoint
+    // Registration endpoint for new users
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
+        // Register the user and check if they already exist
         var user = await _userService.Register(dto.Email, dto.Username, dto.Password, dto.Role, dto.Address, dto.MobileNumber);
         if (user == null) 
             return BadRequest("User already exists");
 
+        // Notify CSR for approval if the user is a customer
         if (dto.Role == "Customer")
         {
             _userService.NotifyCsrForApproval(user);
@@ -32,18 +40,17 @@ public class UsersController : ControllerBase
         return Ok("Account created successfully.");
     }
 
-    // Login endpoint
+    // Login endpoint for users
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
-        // Authenticate user and retrieve user details and tokens
+        // Authenticate user and retrieve JWT and refresh tokens
         var (user, jwtToken, refreshToken) = await _userService.Authenticate(dto.Email, dto.Password, dto.Role);
         
-        // Check if the user exists
         if (user == null)
             return Unauthorized("Invalid credentials");
 
-        // Check if the user is a customer and whether their account is approved
+        // Check for CSR approval and account status for customers
         if (user.Role == "Customer")
         {
             if (!(user.IsApproved ?? false))
@@ -57,49 +64,46 @@ public class UsersController : ControllerBase
             }
         }
 
-        // Return JWT and refresh tokens upon successful login
+        // Return tokens if login is successful
         return Ok(new { token = jwtToken, refreshToken });
     }
 
-    
-
-    // Endpoint for CSR to approve or disapprove customers
+    // Endpoint for CSR to approve/disapprove customers
     [HttpPut("approve-customer/{customerId}")]
     public async Task<IActionResult> ApproveCustomer(string customerId, [FromBody] bool isApproved)
     {
-        // Validate the input
+        // Approve or disapprove customer based on input
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var result = await _userService.ApproveCustomer(customerId, isApproved);
         if (!result)
-        
             return NotFound("Customer not found or already " + (isApproved ? "approved." : "disapproved."));
 
         return Ok(isApproved ? "Customer approved successfully." : "Customer disapproved successfully.");
     }
 
-    // Get a user by ID
+    // Get a specific user by ID
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetUserById(string userId)
     {
+        // Retrieve user by ID
         var user = await _userService.GetUserById(userId);
         if (user == null) return NotFound("User not found");
 
         return Ok(user);
     }
 
-    
-    [HttpGet("user-id")] // Ensure the route is defined
+    // Retrieve user ID from the provided JWT token
+    [HttpGet("user-id")]
     public IActionResult GetUserIdFromToken([FromHeader(Name = "Authorization")] string jwtToken)
     {
-        // Remove "Bearer " prefix if it exists
         if (jwtToken.StartsWith("Bearer "))
         {
             jwtToken = jwtToken.Substring("Bearer ".Length).Trim();
         }
 
-        // Use the JWT service to get the user ID
+        // Use JWT service to extract user ID from token
         var userId = _jwtService.GetUserIdFromJwt(jwtToken);
 
         if (userId == null)
@@ -110,11 +114,11 @@ public class UsersController : ControllerBase
         return Ok(new { UserId = userId });
     }
 
-
-    // Get all users
+    // Get a list of all users
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
+        // Retrieve all users from the system
         var users = await _userService.GetAllUsers();
         return Ok(users);
     }
@@ -123,6 +127,7 @@ public class UsersController : ControllerBase
     [HttpPut("{userId}")]
     public async Task<IActionResult> UpdateUser(string userId, [FromBody] RegisterDto userUpdateDto)
     {
+        // Update user details
         var result = await _userService.UpdateUser(
             userId,
             email: userUpdateDto.Email,
@@ -138,59 +143,61 @@ public class UsersController : ControllerBase
         return Ok("User updated successfully.");
     }
 
-
-    // Delete a user
+    // Delete a user by ID
     [HttpDelete("{userId}")]
     public async Task<IActionResult> DeleteUser(string userId)
     {
+        // Delete user from the system
         var result = await _userService.DeleteUser(userId);
         if (!result) return NotFound("User not found");
 
         return Ok("User deleted successfully.");
     }
 
-    // Logout endpoint
+    // Logout user by invalidating their token(s)
     [HttpPost("logout")]
-    public IActionResult Logout([FromBody] LogoutDto dto) // Assuming LogoutDto contains token and optional refreshToken
+    public IActionResult Logout([FromBody] LogoutDto dto)
     {
+        // Validate token or refresh token for logout
         if (string.IsNullOrEmpty(dto.Token) && string.IsNullOrEmpty(dto.RefreshToken))
             return BadRequest("Token or refresh token is required.");
 
         // Call the JwtService logout method
-        _jwtService.Logout(dto.Token, dto.RefreshToken); // Pass both tokens
+        _jwtService.Logout(dto.Token, dto.RefreshToken);
         return Ok("Logged out successfully.");
     }
 
-    // Activate a user
-[HttpPut("activate/{id}")]
-public async Task<IActionResult> ActivateUser(string id)
-{
-    var updatedUser = await _userService.UpdateUserStatus(id, true); // Assuming UpdateUserStatus is implemented
-    if (updatedUser != null)
+    // Activate a user account by ID
+    [HttpPut("activate/{id}")]
+    public async Task<IActionResult> ActivateUser(string id)
     {
-        return Ok(new 
-        { 
-            Message = "User activated successfully.",
-            User = updatedUser // Return the updated user object
-        });
+        // Activate user account
+        var updatedUser = await _userService.UpdateUserStatus(id, true);
+        if (updatedUser != null)
+        {
+            return Ok(new 
+            { 
+                Message = "User activated successfully.",
+                User = updatedUser
+            });
+        }
+        return NotFound(new { Message = "User not found or User already Activated" });
     }
-    return NotFound(new { Message = "User not found or User already Activated" });
-}
 
-// Deactivate a user
-[HttpPut("deactivate/{id}")]
-public async Task<IActionResult> DeactivateUser(string id)
-{
-    var updatedUser = await _userService.UpdateUserStatus(id, false); // Assuming UpdateUserStatus is implemented
-    if (updatedUser != null)
+    // Deactivate a user account by ID
+    [HttpPut("deactivate/{id}")]
+    public async Task<IActionResult> DeactivateUser(string id)
     {
-        return Ok(new 
-        { 
-            Message = "User deactivated successfully.",
-            User = updatedUser // Return the updated user object
-        });
+        // Deactivate user account
+        var updatedUser = await _userService.UpdateUserStatus(id, false);
+        if (updatedUser != null)
+        {
+            return Ok(new 
+            { 
+                Message = "User deactivated successfully.",
+                User = updatedUser
+            });
+        }
+        return NotFound(new { Message = "User not found or User Already Deactivated" });
     }
-    return NotFound(new { Message = "User not found or User Already Deactivated" });
-}
-
 }

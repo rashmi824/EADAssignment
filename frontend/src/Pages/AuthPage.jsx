@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "../css/Auth.css";
 import Logo from "../images/style.jpg";
 import fashion from "../images/online-shopping.png";
-import swal from "sweetalert";
-import {
- 
-  Navigate,
-} from "react-router-dom";
-
-
+import swal from "sweetalert"; // Import sweetalert for user notifications
+import { Navigate } from "react-router-dom"; // Import Navigate for redirection
 
 const AuthPage = () => {
-  const [isSignup, setIsSignup] = useState(false);
-  const [formData, setFormData] = useState({
+  const [isSignup, setIsSignup] = useState(false); // Track whether the user is signing up or logging in
+  const [formData, setFormData] = useState({ // State for form data
     email: "",
     username: "",
     mobileNumber: "",
@@ -21,16 +16,19 @@ const AuthPage = () => {
     password: "",
     role: "",
   });
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState(null); // State for storing user details after login
 
+  // Handle changes in form input fields
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value }); // Update form data based on input field changes
   };
 
+  // Handle form submission for both login and signup
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     try {
       if (isSignup) {
+        // If the user is signing up, send a registration request
         const response = await axios.post(
           "http://localhost:5266/api/users/register",
           {
@@ -42,10 +40,10 @@ const AuthPage = () => {
             mobileNumber: formData.mobileNumber,
           }
         );
-        swal(response.data); // Success message from the server
-
-        Navigate("/");
+        swal(response.data); // Display success message from the server
+        Navigate("/"); // Redirect to the home page after registration
       } else {
+        // If the user is logging in, send a login request
         const response = await axios.post(
           "http://localhost:5266/api/users/login",
           {
@@ -54,42 +52,41 @@ const AuthPage = () => {
             role: "Other",
           }
         );
-        const { token, refreshToken } = response.data;
+        const { token, refreshToken } = response.data; // Destructure tokens from the response
         console.log(token);
-
         console.log(refreshToken);
 
-        // Store tokens in localStorage
+        // Store tokens in localStorage for authentication
         localStorage.setItem("jwtToken", token);
         localStorage.setItem("refreshToken", refreshToken);
 
-        // Decode the token to get user details
+        // Fetch user ID using the token
         const idResponse = await axios.get(
           "http://localhost:5266/api/users/user-id",
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+              Authorization: `Bearer ${token}`, // Include token in the Authorization header
             },
           }
         );
 
         console.log(idResponse);
+        // Fetch user details using the user ID
         const userResponse = await axios.get(
           `http://localhost:5266/api/users/${idResponse.data.userId}`
         );
-        setUserDetails(userResponse.data);
-        localStorage.setItem("user", JSON.stringify(userResponse.data));
+        setUserDetails(userResponse.data); // Store user details in state
+        localStorage.setItem("user", JSON.stringify(userResponse.data)); // Store user details in localStorage
 
-        swal("Login successful! Tokens received.");
-
-        // Redirect based on role
-        Navigate("/dashboard");
+        swal("Login successful! Tokens received."); // Show success alert
+        Navigate("/dashboard"); // Redirect to dashboard after successful login
       }
     } catch (error) {
+      // Handle any errors that occur during the request
       if (error.response) {
-        swal(error.response.data); // Display server error message
+        swal(error.response.data); // Display error message from the server
       } else {
-        alert("An error occurred, please try again.");
+        alert("An error occurred, please try again."); // Display generic error message
       }
     }
   };
@@ -107,55 +104,55 @@ const AuthPage = () => {
               <h2>{isSignup ? "Create an Account" : "Welcome"}</h2>
               <h3>{isSignup ? "" : "Back Office - Style Hevan"}</h3>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}> {/* Handle form submission */}
               <input
                 type="text"
                 name="email"
                 placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
+                value={formData.email} // Bind input value to email
+                onChange={handleChange} // Handle input changes
                 required
               />
               <input
                 type="password"
                 name="password"
                 placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
+                value={formData.password} // Bind input value to password
+                onChange={handleChange} // Handle input changes
                 required
               />
 
-              {isSignup && (
+              {isSignup && ( // Show additional fields only if signing up
                 <>
                   <input
                     type="text"
                     name="username"
                     placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
+                    value={formData.username} // Bind input value to username
+                    onChange={handleChange} // Handle input changes
                     required
                   />
                   <input
                     type="number"
                     name="mobileNumber"
                     placeholder="Mobile Number"
-                    value={formData.mobileNumber}
-                    onChange={handleChange}
+                    value={formData.mobileNumber} // Bind input value to mobile number
+                    onChange={handleChange} // Handle input changes
                     required
                   />
                   <input
                     type="text"
                     name="address"
                     placeholder="Address"
-                    value={formData.address}
-                    onChange={handleChange}
+                    value={formData.address} // Bind input value to address
+                    onChange={handleChange} // Handle input changes
                     required
                   />
                   <select
                     name="role"
                     placeholder="Role"
-                    value={formData.role}
-                    onChange={handleChange}
+                    value={formData.role} // Bind input value to role
+                    onChange={handleChange} // Handle input changes
                     required
                   >
                     <option value="" disabled>
@@ -170,18 +167,18 @@ const AuthPage = () => {
               )}
 
               <button type="submit" className="auth-btn">
-                {isSignup ? "Sign Up" : "Login"}
+                {isSignup ? "Sign Up" : "Login"} {/* Change button text based on mode */}
               </button>
             </form>
 
             <div className="auth-footer">
-              <a href="#" onClick={() => setIsSignup(!isSignup)}>
+              <a href="#" onClick={() => setIsSignup(!isSignup)}> {/* Toggle signup/login mode */}
                 {isSignup
                   ? "Already have an account? Login"
                   : "Don’t have an account? Sign Up"}
               </a>
               <a href="#" className="forgot-password">
-                Forgot Password?
+                Forgot Password? {/* Link for forgot password */}
               </a>
             </div>
           </div>
