@@ -18,6 +18,8 @@
   margin: auto;
   display: block;
   text-align: center;
+  color:white;
+  margin-bottom: 10px;
 }
 
 .logo-image {
@@ -63,7 +65,7 @@
   position: relative;
 }
 
-.profile-image {
+.prof-image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -71,7 +73,7 @@
 }
 
 .dropdown-menu {
-  position: absolute;
+  display: block;
   background-color: #34495e;
 
   top: 100%;

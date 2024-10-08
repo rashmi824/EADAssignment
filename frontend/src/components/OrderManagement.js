@@ -7,10 +7,10 @@ function OrderManagement() {
     <div className="container mt-4">
       <h2 className="text-center mb-4">Order Management System</h2>
       <div className="text-center mb-4">
-        <Link to="/orders" className="btn btn-secondary mx-2">
+        <Link to="/dashboard/orders" className="btn btn-secondary mx-2">
           View Orders
         </Link>
-        <Link to="/create-order" className="btn btn-primary mx-2">
+        <Link to="/dashboard/create-order" className="btn btn-primary mx-2">
           Create New Order
         </Link>
         {/* Add more links or buttons for other functionalities as needed */}

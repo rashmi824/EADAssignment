@@ -1,28 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "../css/Auth.css";
 import Logo from "../images/style.jpg";
 import fashion from "../images/online-shopping.png";
+import swal from "sweetalert"; // Import sweetalert for user notifications
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+
 const AuthPage = () => {
-  const [isSignup, setIsSignup] = useState(false);
-  const [formData, setFormData] = useState({
+  const [isSignup, setIsSignup] = useState(false); // Track whether the user is signing up or logging in
+  const [formData, setFormData] = useState({ // State for form data
     email: "",
     username: "",
     mobileNumber: "",
     address: "",
     password: "",
-    role: "",
+    role: "Vendor",
   });
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState(null); // State for storing user details after login
 
+  const navigate = useNavigate(); // Use useNavigate for programmatic navigation
+
+  // Handle changes in form input fields
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value }); // Update form data based on input field changes
   };
 
+  // Handle form submission for both login and signup
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     try {
       if (isSignup) {
+        // If the user is signing up, send a registration request
         const response = await axios.post(
           "http://localhost:5266/api/users/register",
           {
@@ -34,53 +42,63 @@ const AuthPage = () => {
             mobileNumber: formData.mobileNumber,
           }
         );
-        alert(response.data); // Success message from the server
+        swal(response.data); // Display success message from the server
+        window.location.reload(); 
       } else {
+        // If the user is logging in, send a login request
         const response = await axios.post(
           "http://localhost:5266/api/users/login",
           {
             email: formData.email,
             password: formData.password,
-            role: "Other",
-          }
-        );
-        const { token, refreshToken } = response.data;
-        console.log(token);
-
-        console.log(refreshToken);
-
-        // Store tokens in localStorage
-        localStorage.setItem("jwtToken", token);
-        localStorage.setItem("refreshToken", refreshToken);
-
-        // Decode the token to get user details
-        const idResponse = await axios.get(
-          "http://localhost:5266/api/users/user-id",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-            },
+            role : formData.role,
           }
         );
 
-        console.log(idResponse);
-        const userResponse = await axios.get(
-          `http://localhost:5266/api/users/${idResponse.data.userId}`
-        );
-        setUserDetails(userResponse.data);
-        localStorage.setItem("user", JSON.stringify(userResponse.data));
+        // Check if the response contains a token
+        if (response.data.token && response.data.refreshToken) {
+          const { token, refreshToken } = response.data; // Destructure tokens from the response
+          console.log(token);
+          console.log(refreshToken);
 
-        alert("Login successful! Tokens received.");
+          // Store tokens in localStorage for authentication
+          localStorage.setItem("jwtToken", token);
+          localStorage.setItem("refreshToken", refreshToken);
 
-        // Redirect based on role
+          // Fetch user ID using the token
+          const idResponse = await axios.get(
+            "http://localhost:5266/api/users/user-id",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Include token in the Authorization header
+              },
+            }
+          );
 
-        window.location.href = "/dashboard";
+          // Check if we received a userId in the response
+          if (idResponse.data.userId) {
+            // Fetch user details using the user ID
+            const userResponse = await axios.get(
+              `http://localhost:5266/api/users/${idResponse.data.userId}`
+            );
+            setUserDetails(userResponse.data); // Store user details in state
+            localStorage.setItem("user", JSON.stringify(userResponse.data)); // Store user details in localStorage
+
+            swal("Login successful! Tokens received."); // Show success alert
+            navigate("/dashboard"); // Redirect to dashboard after successful login
+          } else {
+            swal("User ID not found."); // Alert if user ID is not found
+          }
+        } else {
+          swal("Login failed. Please check your credentials."); // Alert if no token received
+        }
       }
     } catch (error) {
+      // Handle any errors that occur during the request
       if (error.response) {
-        alert(error.response.data); // Display server error message
+        swal(error.response.data); // Display error message from the server
       } else {
-        alert("An error occurred, please try again.");
+        alert("An error occurred, please try again."); // Display generic error message
       }
     }
   };
@@ -98,55 +116,55 @@ const AuthPage = () => {
               <h2>{isSignup ? "Create an Account" : "Welcome"}</h2>
               <h3>{isSignup ? "" : "Back Office - Style Hevan"}</h3>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}> {/* Handle form submission */}
               <input
                 type="text"
                 name="email"
                 placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
+                value={formData.email} // Bind input value to email
+                onChange={handleChange} // Handle input changes
                 required
               />
               <input
                 type="password"
                 name="password"
                 placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
+                value={formData.password} // Bind input value to password
+                onChange={handleChange} // Handle input changes
                 required
               />
 
-              {isSignup && (
+              {isSignup && ( // Show additional fields only if signing up
                 <>
                   <input
                     type="text"
                     name="username"
                     placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
+                    value={formData.username} // Bind input value to username
+                    onChange={handleChange} // Handle input changes
                     required
                   />
                   <input
                     type="number"
                     name="mobileNumber"
                     placeholder="Mobile Number"
-                    value={formData.mobileNumber}
-                    onChange={handleChange}
+                    value={formData.mobileNumber} // Bind input value to mobile number
+                    onChange={handleChange} // Handle input changes
                     required
                   />
                   <input
                     type="text"
                     name="address"
                     placeholder="Address"
-                    value={formData.address}
-                    onChange={handleChange}
+                    value={formData.address} // Bind input value to address
+                    onChange={handleChange} // Handle input changes
                     required
                   />
                   <select
                     name="role"
                     placeholder="Role"
-                    value={formData.role}
-                    onChange={handleChange}
+                    value={formData.role} // Bind input value to role
+                    onChange={handleChange} // Handle input changes
                     required
                   >
                     <option value="" disabled>
@@ -161,18 +179,18 @@ const AuthPage = () => {
               )}
 
               <button type="submit" className="auth-btn">
-                {isSignup ? "Sign Up" : "Login"}
+                {isSignup ? "Sign Up" : "Login"} {/* Change button text based on mode */}
               </button>
             </form>
 
             <div className="auth-footer">
-              <a href="#" onClick={() => setIsSignup(!isSignup)}>
+              <a href="#" onClick={() => setIsSignup(!isSignup)}> {/* Toggle signup/login mode */}
                 {isSignup
                   ? "Already have an account? Login"
                   : "Don’t have an account? Sign Up"}
               </a>
               <a href="#" className="forgot-password">
-                Forgot Password?
+                Forgot Password? {/* Link for forgot password */}
               </a>
             </div>
           </div>
