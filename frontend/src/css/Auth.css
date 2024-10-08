@@ -1,0 +1,156 @@
+/* Main container */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120vh;
+  background: linear-gradient(135deg,#e2d2e6 , #f9bfff);
+  margin:0 px;
+  width : 100%;
+}
+
+.auth-page {
+  display: flex;
+  height: 90vh;
+  background-color: #f0f0f0;
+  width: 80% !important;
+  margin: auto;
+  margin-top: 50px !important;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+/* Left section for illustration */
+.auth-illustration {
+  width: 50%;
+  background: linear-gradient(135deg,#870fa5 , #d100e0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.auth-illustration img {
+  max-width: 80%;
+}
+
+/* Right section for the form */
+.auth-form-container {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-top: 7px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form {
+  width: 80%;
+  max-width: 400px;
+  padding: 40px;
+  text-align: center;
+}
+
+.auth-header {
+  margin-bottom: 20px;
+}
+
+.auth-header .avatar-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.auth-header h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+/* Style for input fields and select dropdown */
+.auth-form input,
+.auth-form select {
+  width: 100% !important;
+  padding: 10px !important;
+  margin-bottom: 15px   !important;
+  border: 1px solid #ccc !important;
+  border-radius: 5px !important;
+  font-size: 16px  !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  background-color: white ;
+  transition: border-color 0.3s ease  ;
+}
+
+.auth-form select {
+  width: 320px !important;
+  
+}
+
+/* Hover and focus styles */
+.auth-form input:focus,
+.auth-form select:focus {
+  border-color: #870fa5 !important;
+  outline: none;
+}
+
+/* Make dropdown have the same appearance */
+.auth-form select {
+  appearance: none; /* Hide the default dropdown arrow */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23999" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: center;
+  padding-right: 30px; /* Space for the dropdown arrow */
+}
+
+/* Button styling */
+.auth-btn {
+  width:200px !important;
+  padding: 10px;
+  background-color:#870fa5 ;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.auth-btn:hover {
+  background-color: #cc00ff ;
+}
+
+/* Footer section styling */
+.auth-footer {
+  margin-top: 20px;
+}
+
+.auth-footer a {
+  color: #870fa5 ;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.forgot-password {
+  margin-left: 10px;
+}

@@ -1,0 +1,80 @@
+.vendor-profile {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vendor-profile h2 {
+  text-align: center;
+}
+
+.profile-image {
+  display: block;
+  margin: 0 auto 20px;
+  width: 150px; /* Adjust width as needed */
+  height: 150px; /* Adjust height as needed */
+  border-radius: 75px; /* Circular image */
+  object-fit: cover; /* Cover image to fit the container */
+}
+
+.vendor-form {
+  margin-bottom: 20px;
+}
+
+.vendor-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.vendor-form input {
+  width: calc(100% - 10px);
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.profile-button-group {
+  display: flex;
+  justify-content: center; /* Center the buttons horizontally */
+  gap: 10px; /* Add space between buttons */
+  margin-top: 20px; /* Optional: Add margin for spacing */
+}
+
+.edit-button,
+.update-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.update-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.update-button:hover {
+  background-color: #218838;
+}
+
+.vendor-field {
+  margin-bottom: 20px;
+}
+.unique-content-title{
+ color:#450056;
+ margin-bottom:20px;
+}

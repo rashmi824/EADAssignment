@@ -1,0 +1,105 @@
+/* src/components/Sidebar.css */
+.dashboard-sidebar {
+  width: 300px;
+  background-color: #870fa5;
+  color: #ecf0f1;
+  height: 96vh;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.sidebar-header {
+  padding-top: 10px;
+  align-items: center;;
+}
+
+.app-logo {
+  font-size: 1.5em;
+  margin: auto;
+  display: block;
+  text-align: center;
+  color:white;
+  margin-bottom: 10px;
+}
+
+.logo-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-top: 10px;
+  display: block;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.sidebar-navigation {
+  margin-top: 0px !important;
+  padding: 0 !important;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: 10px 15px;
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: background 0.5s;
+  border-bottom: 1px solid #ffffff;
+  margin: 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #48006a;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  position: relative;
+}
+
+.prof-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.dropdown-menu {
+  display: block;
+  background-color: #34495e;
+
+  top: 100%;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  left: 50px;
+}
+
+.dropdown-menu ul {
+  list-style: none;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  padding: 10px 15px;
+}
+
+.dropdown-menu li a {
+  color: #ecf0f1;
+  text-decoration: none;
+  display: block;
+  transition: background 0.3s;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #1abc9c;
+}
