@@ -4,7 +4,7 @@ import "../css/Auth.css";
 import Logo from "../images/style.jpg";
 import fashion from "../images/online-shopping.png";
 import swal from "sweetalert"; // Import sweetalert for user notifications
-import { Navigate } from "react-router-dom"; // Import Navigate for redirection
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const AuthPage = () => {
   const [isSignup, setIsSignup] = useState(false); // Track whether the user is signing up or logging in
@@ -14,9 +14,11 @@ const AuthPage = () => {
     mobileNumber: "",
     address: "",
     password: "",
-    role: "",
+    role: "Vendor",
   });
   const [userDetails, setUserDetails] = useState(null); // State for storing user details after login
+
+  const navigate = useNavigate(); // Use useNavigate for programmatic navigation
 
   // Handle changes in form input fields
   const handleChange = (e) => {
@@ -41,7 +43,7 @@ const AuthPage = () => {
           }
         );
         swal(response.data); // Display success message from the server
-        Navigate("/"); // Redirect to the home page after registration
+        window.location.reload(); 
       } else {
         // If the user is logging in, send a login request
         const response = await axios.post(
@@ -49,37 +51,47 @@ const AuthPage = () => {
           {
             email: formData.email,
             password: formData.password,
-            role: "Other",
-          }
-        );
-        const { token, refreshToken } = response.data; // Destructure tokens from the response
-        console.log(token);
-        console.log(refreshToken);
-
-        // Store tokens in localStorage for authentication
-        localStorage.setItem("jwtToken", token);
-        localStorage.setItem("refreshToken", refreshToken);
-
-        // Fetch user ID using the token
-        const idResponse = await axios.get(
-          "http://localhost:5266/api/users/user-id",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Include token in the Authorization header
-            },
+            role : formData.role,
           }
         );
 
-        console.log(idResponse);
-        // Fetch user details using the user ID
-        const userResponse = await axios.get(
-          `http://localhost:5266/api/users/${idResponse.data.userId}`
-        );
-        setUserDetails(userResponse.data); // Store user details in state
-        localStorage.setItem("user", JSON.stringify(userResponse.data)); // Store user details in localStorage
+        // Check if the response contains a token
+        if (response.data.token && response.data.refreshToken) {
+          const { token, refreshToken } = response.data; // Destructure tokens from the response
+          console.log(token);
+          console.log(refreshToken);
 
-        swal("Login successful! Tokens received."); // Show success alert
-        Navigate("/dashboard"); // Redirect to dashboard after successful login
+          // Store tokens in localStorage for authentication
+          localStorage.setItem("jwtToken", token);
+          localStorage.setItem("refreshToken", refreshToken);
+
+          // Fetch user ID using the token
+          const idResponse = await axios.get(
+            "http://localhost:5266/api/users/user-id",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Include token in the Authorization header
+              },
+            }
+          );
+
+          // Check if we received a userId in the response
+          if (idResponse.data.userId) {
+            // Fetch user details using the user ID
+            const userResponse = await axios.get(
+              `http://localhost:5266/api/users/${idResponse.data.userId}`
+            );
+            setUserDetails(userResponse.data); // Store user details in state
+            localStorage.setItem("user", JSON.stringify(userResponse.data)); // Store user details in localStorage
+
+            swal("Login successful! Tokens received."); // Show success alert
+            navigate("/dashboard"); // Redirect to dashboard after successful login
+          } else {
+            swal("User ID not found."); // Alert if user ID is not found
+          }
+        } else {
+          swal("Login failed. Please check your credentials."); // Alert if no token received
+        }
       }
     } catch (error) {
       // Handle any errors that occur during the request
