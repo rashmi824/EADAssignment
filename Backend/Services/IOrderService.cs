@@ -1,3 +1,7 @@
+// Defines the contract for order-related operations in the application.
+// The IOrderService interface provides methods for creating, updating, retrieving, 
+// and managing orders.
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Models;
@@ -10,8 +14,8 @@ public interface IOrderService
     Task<Order> MarkAsDelivered(string orderId);
     Task<List<Order>> GetOrdersByCustomerId(string customerId);
     Task<List<Order>> GetOrdersByVendorId(string vendorId);
-    // Add other methods as necessary
-    Task<Order> GetOrderById(string orderId); // Newly added method
+
+    Task<Order> GetOrderById(string orderId);
 
     Task<List<Order>> GetAllOrders();
 

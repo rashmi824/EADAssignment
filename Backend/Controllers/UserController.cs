@@ -20,7 +20,7 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
         var user = await _userService.Register(dto.Email, dto.Username, dto.Password, dto.Role, dto.Address, dto.MobileNumber);
-        if (user == null) 
+        if (user == null)
             return BadRequest("User already exists");
 
         if (dto.Role == "Customer")
@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
     {
         // Authenticate user and retrieve user details and tokens
         var (user, jwtToken, refreshToken) = await _userService.Authenticate(dto.Email, dto.Password, dto.Role);
-        
+
         // Check if the user exists
         if (user == null)
             return Unauthorized("Invalid credentials");
@@ -50,7 +50,7 @@ public class UsersController : ControllerBase
             {
                 return Unauthorized("Your account is pending approval from CSR.");
             }
-            
+
             if (!(user.Status ?? false))
             {
                 return Unauthorized("Your account has been deactivated.");
@@ -61,7 +61,7 @@ public class UsersController : ControllerBase
         return Ok(new { token = jwtToken, refreshToken });
     }
 
-    
+
 
     // Endpoint for CSR to approve or disapprove customers
     [HttpPut("approve-customer/{customerId}")]
@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
 
         var result = await _userService.ApproveCustomer(customerId, isApproved);
         if (!result)
-        
+
             return NotFound("Customer not found or already " + (isApproved ? "approved." : "disapproved."));
 
         return Ok(isApproved ? "Customer approved successfully." : "Customer disapproved successfully.");
@@ -89,7 +89,7 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
 
-    
+
     [HttpGet("user-id")] // Ensure the route is defined
     public IActionResult GetUserIdFromToken([FromHeader(Name = "Authorization")] string jwtToken)
     {
@@ -152,35 +152,35 @@ public class UsersController : ControllerBase
     }
 
     // Activate a user
-[HttpPut("activate/{id}")]
-public async Task<IActionResult> ActivateUser(string id)
-{
-    var updatedUser = await _userService.UpdateUserStatus(id, true); // Assuming UpdateUserStatus is implemented
-    if (updatedUser != null)
+    [HttpPut("activate/{id}")]
+    public async Task<IActionResult> ActivateUser(string id)
     {
-        return Ok(new 
-        { 
-            Message = "User activated successfully.",
-            User = updatedUser // Return the updated user object
-        });
+        var updatedUser = await _userService.UpdateUserStatus(id, true); // Assuming UpdateUserStatus is implemented
+        if (updatedUser != null)
+        {
+            return Ok(new
+            {
+                Message = "User activated successfully.",
+                User = updatedUser // Return the updated user object
+            });
+        }
+        return NotFound(new { Message = "User not found or User already Activated" });
     }
-    return NotFound(new { Message = "User not found or User already Activated" });
-}
 
-// Deactivate a user
-[HttpPut("deactivate/{id}")]
-public async Task<IActionResult> DeactivateUser(string id)
-{
-    var updatedUser = await _userService.UpdateUserStatus(id, false); // Assuming UpdateUserStatus is implemented
-    if (updatedUser != null)
+    // Deactivate a user
+    [HttpPut("deactivate/{id}")]
+    public async Task<IActionResult> DeactivateUser(string id)
     {
-        return Ok(new 
-        { 
-            Message = "User deactivated successfully.",
-            User = updatedUser // Return the updated user object
-        });
+        var updatedUser = await _userService.UpdateUserStatus(id, false); // Assuming UpdateUserStatus is implemented
+        if (updatedUser != null)
+        {
+            return Ok(new
+            {
+                Message = "User deactivated successfully.",
+                User = updatedUser // Return the updated user object
+            });
+        }
+        return NotFound(new { Message = "User not found or User Already Deactivated" });
     }
-    return NotFound(new { Message = "User not found or User Already Deactivated" });
-}
 
 }
