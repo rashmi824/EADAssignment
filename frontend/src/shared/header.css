@@ -1,0 +1,112 @@
+/* Custom Navbar Styling */
+.custom-navbar {
+    background-color: #4A90E2; /* Change to a modern blue shade */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern look */
+    padding: 10px 20px;
+  }
+  
+  .custom-navbar .navbar-brand img {
+    border-radius: 50%; /* Circular logo */
+  }
+  
+  .custom-navbar .site-name {
+    font-family: 'Baufra', sans-serif;
+    font-size: 24px;
+    color: white;
+    margin-left: 15px;
+  }
+  
+  .navbar-toggler-icon {
+    color: white; /* Ensure icon matches the background */
+  }
+  
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5); /* Lighter border for the toggler */
+  }
+  
+  .navbar-nav .nav-link {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: white !important; /* White text for the nav links */
+    margin-right: 20px;
+    transition: color 0.3s ease-in-out; /* Smooth hover effect */
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #ffcc00 !important; /* Highlight color on hover */
+  }
+  
+  .navbar-nav .active .nav-link {
+    color: #ffcc00 !important; /* Highlight active nav link */
+  }
+  
+  .btn-outline-dark {
+    color: #fff !important;
+    border-color: #ffcc00;
+    background-color: #4A90E2;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .btn-outline-dark:hover {
+    color: #4A90E2 !important;
+    background-color: #ffcc00 !important;
+    border-color: #ffcc00 !important;
+  }
+  
+  .custom-navbar .navbar-brand .site-name {
+    line-height: 80px; 
+    margin-left: 10px;  
+  }
+  
+  .notification-bell {
+    position: relative;
+  }
+  
+  .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+  }
+  
+  /* Dropdown styling */
+  .notification-dropdown {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    width: 290px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 5px;
+  }
+  
+  .notification-dropdown h6 {
+    padding: 10px;
+    background-color: #f8f9fa;
+    margin: 0;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .notification-dropdown ul {
+    margin: 0;
+    padding: 10px;
+    list-style-type: none;
+  }
+  
+  .notification-dropdown .dropdown-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #e0f7fa; /* Light blue color */
+    cursor: pointer;
+  }
+  
+  .notification-dropdown .dropdown-item:hover {
+    background-color: #f1f1f1;
+  }
+  
