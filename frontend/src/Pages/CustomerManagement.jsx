@@ -292,14 +292,7 @@ function CustomerManagement() {
           </tbody>
         </table>
       </div>
-      <div className="unique-add-user-btn-container">
-        <button
-          className="unique-btn unique-btn-add"
-          onClick={handleRegisterUserModalShow} // Show registration modal
-        >
-          Add User
-        </button>
-      </div>
+
     </div>
   );
 }

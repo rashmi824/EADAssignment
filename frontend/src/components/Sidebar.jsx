@@ -8,7 +8,7 @@ const Sidebar = ({ role }) => {
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
-    setDropdownVisible((prev) => !prev);
+    setDropdownVisible(true);
   };
 
   const handleOutsideClick = (e) => {
