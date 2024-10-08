@@ -1,3 +1,11 @@
+
+using AspNetCore.Identity.MongoDbCore.Infrastructure;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using System;
+using Backend.Services;
+using Backend;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +15,45 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Backend.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
+BsonSerializer.RegisterSerializer(new DateTimeSerializer(MongoDB.Bson.BsonType.String));
+BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
+
+// Configure and register an instance of IMongoDatabase
+var connectionString = "mongodb+srv://admin:Lakshika98#@mern-booking-app-db.sccf6ok.mongodb.net/?retryWrites=true&w=majority&appName=mern-booking-app-db";
+var databaseName = "mern-booking-app-db";
+var mongoClient = new MongoClient(connectionString);
+var mongoDatabase = mongoClient.GetDatabase(databaseName);
+
+builder.Services.AddSingleton<IMongoDatabase>(mongoDatabase);
+
+// Register custom services
+builder.Services.AddSingleton<ProductService>();
+builder.Services.AddSingleton<InventoryService>();
+
+// Add controllers and Swagger
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
+
+var app = builder.Build();
+
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.MapControllers();
+app.Run();
 
 namespace Backend
 {
@@ -116,3 +163,4 @@ namespace Backend
                 });
     }
 }
+
