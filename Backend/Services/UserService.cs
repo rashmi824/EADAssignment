@@ -74,6 +74,7 @@ public class UserService : IUserService
 
         // Insert the new user into the database
         await _users.InsertOneAsync(user);
+        NotifyCsrForApproval(user);
 
         return user; // Return the registered user
     }
@@ -81,7 +82,7 @@ public class UserService : IUserService
     // Notify CSR for approval of new customer registration
     public async Task NotifyCsrForApproval(User newUser)
     {
-        var csrUsers = await _users.Find(u => u.Role == "CSR").ToListAsync(); // Retrieve all CSR users
+        var csrUsers = await _users.Find(u => u.Role == "CSR" || u.Role == "Administrator").ToListAsync(); // Retrieve all CSR users
         string subject = "New Customer Registration Pending Approval";
         string message = $"A new customer has registered. Username: {newUser.Username}, Email: {newUser.Email}. Please review and approve.";
 

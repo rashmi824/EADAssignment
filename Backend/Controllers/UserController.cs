@@ -33,7 +33,7 @@ public class UsersController : ControllerBase
         // Notify CSR for approval if the user is a customer
         if (dto.Role == "Customer")
         {
-            _userService.NotifyCsrForApproval(user);
+            
             return Ok("Account created successfully. Your account is pending approval from CSR.");
         }
 
