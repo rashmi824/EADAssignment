@@ -10,8 +10,8 @@ const VendorProfile = ({ userId }) => {
     email: "",
     mobileNumber: "",
     address: "",
-    averageRating: "",
-    comments: [],
+    password: "",
+    role: "",
   });
   const [loading, setLoading] = useState(true); // State to manage loading state
   const [error, setError] = useState(null); // State to manage error messages
@@ -49,10 +49,19 @@ const VendorProfile = ({ userId }) => {
   // Handle vendor details update
   const handleUpdate = async (e) => {
     e.preventDefault(); // Prevent default form submission
+    const userUpdateDto = {
+      username: vendor.username,
+      email: vendor.email,
+      mobileNumber: vendor.mobileNumber,
+      address: vendor.address,
+      password: vendor.password || '', // Include password only if needed
+      role: vendor.role, // Set the role as necessary, or fetch it from the vendor state if available
+    };
+
     try {
       const response = await axios.put(
         `http://localhost:5266/api/users/${userId}`,
-        vendor // Send updated vendor details
+        userUpdateDto // Send updated vendor details
       );
       if (response.status === 200) {
         setIsEditing(false); // Exit editing mode on successful update
@@ -61,7 +70,7 @@ const VendorProfile = ({ userId }) => {
         setError("Failed to update vendor details");
       }
     } catch (error) {
-      setError("Error: " + error.message); // Set error message if updating fails
+      console.log("Error: " + error.response.data); // Set error message if updating fails
     }
   };
 
@@ -104,12 +113,28 @@ const VendorProfile = ({ userId }) => {
               value={vendor.email} // Bind input value to vendor.email
               onChange={handleChange} // Handle input changes
               required // Make field required
-              disabled // Disable email input field during editing
             />
           ) : (
             <p>{vendor.email}</p> // Display email if not editing
           )}
         </div>
+        <div className="vendor-field">
+          <strong>Password:</strong>
+          {isEditing ? (
+            <input
+              type="input"
+              name="password"
+              value={vendor.password} // Bind input value to vendor.password
+              onChange={handleChange} // Handle input changes
+              
+            />
+          ) : (
+
+            <p>********</p> // Display password if not editing
+          )}
+        </div>
+
+
         <div className="vendor-field">
           <strong>Mobile Number:</strong>
           {isEditing ? (
@@ -138,27 +163,6 @@ const VendorProfile = ({ userId }) => {
             <p>{vendor.address}</p> // Display address if not editing
           )}
         </div>
-        {vendor.averageRating !== null &&
-          vendor.averageRating !== undefined && (
-            <div className="vendor-field">
-              <strong>Average Rating:</strong>
-              <p>{vendor.averageRating || 0}</p>
-            </div>
-          )}
-        {vendor.comments ? (
-          <div className="vendor-field">
-            <h3>Comments:</h3>
-            {vendor.comments.length > 0 ? (
-              <ul>
-                {vendor.comments.map((comment, index) => (
-                  <li key={index}>{comment}</li> // Display each comment in a list
-                ))}
-              </ul>
-            ) : (
-              <p>No comments yet</p> // Message when there are no comments
-            )}
-          </div>
-        ) : null}
 
         <div className="profile-button-group">
           <button
@@ -166,11 +170,11 @@ const VendorProfile = ({ userId }) => {
             onClick={() => setIsEditing(!isEditing)} // Toggle edit mode
             className="edit-button"
           >
-            {isEditing ? "Cancel" : "Edit"} 
+            {isEditing ? "Cancel" : "Edit"}
           </button>
           {isEditing && (
             <button type="submit" className="update-button">
-              Update // Show update button when in edit mode
+              Update {/* Show update button when in edit mode */}
             </button>
           )}
         </div>

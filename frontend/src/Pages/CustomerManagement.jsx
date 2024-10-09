@@ -3,6 +3,14 @@ import axios from "axios";
 import swal from "sweetalert";
 import RegisterModal from "../components/RegisterModal";
 import "../css/userTable.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faThumbsUp,
+  faThumbsDown,
+  faUserCheck,
+  faUserXmark,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 function CustomerManagement() {
   const [userId, setUserId] = useState("");
@@ -77,8 +85,9 @@ function CustomerManagement() {
         },
       })
       .then(() => {
-        Activate(id); // Activate the user after approval
-        window.location.reload(); // Reload the page to update the user list
+        //Activate(id); // Activate the user after approval
+        swal("User Approved successfully!", "", "success");
+        //window.location.reload(); // Reload the page to update the user list
       })
       .catch((err) => {
         console.error(err);
@@ -99,7 +108,7 @@ function CustomerManagement() {
         },
       })
       .then(() => {
-        Deactivate(id); // Deactivate the user after disapproval
+        //Deactivate(id); // Deactivate the user after disapproval
         window.location.reload(); // Reload the page to update the user list
       })
       .catch((err) => {
@@ -248,51 +257,70 @@ function CustomerManagement() {
                 <td>{user.email}</td>
                 <td>{user.address}</td>
                 <td>{user.mobileNumber}</td>
-
                 <td>{user.status === true ? "Active" : "Deactive"}</td>
 
                 <td>
-                  {activeTab === "new" || activeTab === "Reject" ? (
-                    <>
-                      <button
-                        className="unique-btn unique-btn-success"
-                        onClick={() => Approve(user.id)}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className="unique-btn unique-btn-danger"
-                        onClick={() => disApprove(user.id)}
-                      >
-                        Reject
-                      </button>
-                    </>
-                  ) : activeTab === "Inactive" ? (
-                    <>
-                      <button
-                        className="unique-btn unique-btn-1"
-                        onClick={() => Activate(user.id)}
-                      >
-                        Activate
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="unique-btn unique-btn-danger"
-                        onClick={() => deleteUser(user.id)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
+                  {
+                    activeTab === "new" || activeTab === "Reject" ? (
+                      <>
+                        <button
+                          className="unique-btn unique-btn-success"
+                          onClick={() => Approve(user.id)}
+                          title="Approve User"
+                        >
+                          <FontAwesomeIcon icon={faThumbsUp} />
+                        </button>
+                        <button
+                          className="unique-btn unique-btn-1"
+                          onClick={() => Deactivate(user.id)}
+                          title="Reject User"
+                        >
+                          <FontAwesomeIcon icon={faThumbsDown} />
+                        </button>
+                        <button
+                          className="unique-btn unique-btn-danger"
+                          onClick={() => deleteUser(user.id)}
+                          title="Delete User"
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </>
+                    ) : activeTab === "Inactive" ? (
+                      <>
+                        <button
+                          className="unique-btn unique-btn-2"
+                          onClick={() => Activate(user.id)}
+                          title="Activate User"
+                        >
+                          <FontAwesomeIcon icon={faUserCheck} />
+                        </button>
+
+                      </>
+                    ) : activeTab === "active" ? (
+                      <>
+                        <button
+                          className="unique-btn unique-btn-1"
+                          onClick={() => Deactivate(user.id)} // Logic to mark as inactive
+                          title="Mark as Inactive"
+                        >
+                          <FontAwesomeIcon icon={faUserXmark} />
+                        </button>
+                        <button
+                          className="unique-btn unique-btn-danger"
+                          onClick={() => deleteUser(user.id)}
+                          title="Delete User"
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </>
+                    ) : null /* Handle other cases if necessary */
+                  }
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
     </div>
   );
 }
