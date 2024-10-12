@@ -8,7 +8,7 @@ function Footer() {
   };
 
   return (
-    <footer className="bg-dark text-center text-white">
+<footer className="text-center text-white" style={{ backgroundColor: '#9966CC' }}>
   <div className="container p-4 pb-0">
     <section className="mb-2">
       <img
@@ -19,13 +19,13 @@ function Footer() {
         alt="MakeMyTrip Logo"
       />
       <br />
-      <span>Clothing Store</span>
+      <span>Style Heaven</span>
     </section>
   </div>
 
   <div className="text-center p-3" style={style}>
-    © 2023 Copyright : 
-    <a className="text-white" href="http://localhost:3000/">clothingstore.lk</a>
+    © 2024 Copyright : 
+    <a className="text-white" href="http://localhost:3000/">styleheaven.lk</a>
   </div>
 </footer>
 

@@ -150,7 +150,8 @@ function UpdateProduct() {
               style={{
                 maxWidth: "550px",
                 height: "550px",
-                marginBottom: "20px",
+                marginBottom: "0px",
+                marginLeft: "-200px"
               }}
             />
           </div>
