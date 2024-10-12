@@ -104,10 +104,10 @@ class AllProducts extends Component {
 
     return (
       <div className="d-flex align-items-center justify-content-center h-100">
-        <div className="container card p-5 m-5">
+        <div className="container card  p-5 m-5"style={{ width: "90vw", maxWidth: "1000px" }}>
           <h1
             className="text-center"
-            style={{ color: "0448db", fontFamily: "Baufra" }}
+            style={{ color: "#9966CC", fontFamily: "Baufra" }}
           >
             <b>Product Management</b>
           </h1>
@@ -124,7 +124,7 @@ class AllProducts extends Component {
               />
 
               {/* Add product button */}
-              <Link to="/addProduct" className="btn btn-success mb-3">
+              <Link to="/addProduct" className="btn mb-3" style={{ backgroundColor: '#9966CC', color: 'white' }}>
                 Add New Product
               </Link>
             </div>
@@ -135,19 +135,20 @@ class AllProducts extends Component {
               </div>
             ) : (
               <table className="table bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">Product ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Active</th>
-                    <th scope="col">Actions</th>
-                  </tr>
-                </thead>
+               <thead>
+  <tr>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>#</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Image</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Product ID</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Name</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Category</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Description</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Price</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Active</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Actions</th>
+  </tr>
+</thead>
+
                 <tbody>
                   {filteredPosts.map((post, index) => (
                     <tr key={index}>
@@ -155,7 +156,7 @@ class AllProducts extends Component {
                       <td>
                         <img
                           src={`data:image/jpeg;base64,${post.image}`}
-                          style={{ height: "80px", width: "70px" }}
+                          style={{ height: "80px", width: "70px"}}
                           alt="Product"
                         />
                       </td>

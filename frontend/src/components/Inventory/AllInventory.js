@@ -135,7 +135,7 @@ class AllInventory extends Component {
         <div className="container card p-5 m-5">
           <h1
             className="text-center"
-            style={{ color: "#0448db", fontFamily: "Baufra" }}
+            style={{ color: "#9966CC", fontFamily: "Baufra" }}
           >
             <b>Inventory Management</b>
           </h1>
@@ -168,7 +168,7 @@ class AllInventory extends Component {
               
             </div>
             <br/>
-              <Link to="/addInventory" className="btn btn-success mb-3">
+              <Link to="/addInventory" className="btn btn-success mb-3" style={{ backgroundColor: '#9966CC', color: 'white',outline: '2px solid #DDA0DD',border: 'none'}}>
                 Add New Inventory
               </Link>
             <br />
@@ -179,15 +179,16 @@ class AllInventory extends Component {
             ) : (
               <table className="table table-bordered">
                 <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Product ID</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Stock Level</th>
-                    <th scope="col">Stock Status</th>
-                    <th scope="col">Actions</th>
-                  </tr>
-                </thead>
+  <tr>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>#</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Product ID</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Product Name</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Stock Level</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Stock Status</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Actions</th>
+  </tr>
+</thead>
+
                 <tbody>
                   {filteredInventory.map((item, index) => (
                     <tr key={index}>

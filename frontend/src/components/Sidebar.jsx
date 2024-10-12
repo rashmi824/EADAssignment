@@ -54,12 +54,12 @@ const Sidebar = ({ role }) => {
           {role === "Administrator" && (
             <>
               <li>
-                <a href="/dashboard/product-management" className="nav-link">
+                <a href="/allproducts" className="nav-link">
                   Product Management
                 </a>
               </li>
               <li>
-                <a href="/dashboard/inventory-management" className="nav-link">
+                <a href="/allInventories" className="nav-link">
                   Inventory Management
                 </a>
               </li>
@@ -83,7 +83,7 @@ const Sidebar = ({ role }) => {
           {role === "Vendor" && (
             <>
               <li>
-                <a href="/dashboard/product-management" className="nav-link">
+                <a href="/allproducts" className="nav-link">
                   Product Management
                 </a>
               </li>
