@@ -142,7 +142,7 @@ class AllProducts extends Component {
     <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Product ID</th>
     <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Name</th>
     <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Category</th>
-    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Description</th>
+    <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Vendor ID</th>
     <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Price</th>
     <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Active</th>
     <th scope="col" style={{ backgroundColor: '#A6959A', color: 'white' }}>Actions</th>
