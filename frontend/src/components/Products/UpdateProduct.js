@@ -192,7 +192,7 @@ function UpdateProduct() {
                   />
                 </div>
                 <div className="form-group" style={{ marginBottom: "15px" }}>
-                  <label style={{ marginBottom: "5px" }}>Description:</label>
+                  <label style={{ marginBottom: "5px" }}>Vendor ID:</label>
                   <input
                     type="text"
                     className="form-control"

@@ -141,8 +141,8 @@ export default class AddProduct extends Component {
                   </div>
 
                   <div className="form-group" style={{ marginBottom: "15px" }}>
-                    <label style={{ marginBottom: "5px" }}>Description: </label>
-                    <textarea
+                    <label style={{ marginBottom: "5px" }}>Vendor ID: </label>
+                    <input
                       id="description"
                       className="form-control"
                       name="description"
