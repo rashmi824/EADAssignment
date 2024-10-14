@@ -3,6 +3,10 @@ import axios from "axios";
 import swal from "sweetalert";
 import RegisterModal from "../components/RegisterModal";
 import "../css/userTable.css";
+import UpdateModal from "../components/UpdateModal";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCheck, faUserXmark, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+
 
 function VendorManagement() {
   const [userId, setUserId] = useState("");
@@ -11,6 +15,8 @@ function VendorManagement() {
   const [isUserRegistered, setIsUserRegistered] = useState(false);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("new");
+  const [showModal, setShowModal] = useState(false);
+  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
   // Fetch Users when the component mounts or when a user is registered
   useEffect(() => {
@@ -30,6 +36,16 @@ function VendorManagement() {
   const handleRegisterUserModalClose = () => {
     setShowRegisterUserModal(false);
     setIsUserRegistered(false);
+  };
+
+  // Close the update modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleshowModal = (id) => {
+    setUserId(id);
+    setShowModal(true);
   };
 
   // Show the registration modal
@@ -167,6 +183,13 @@ function VendorManagement() {
         handleClose={handleRegisterUserModalClose}
         setIsUserRegistered={setIsUserRegistered} // Pass function to update registration state
       />
+
+      <UpdateModal
+        show={showModal}
+        handleClose={handleCloseModal} // Close modal handler
+        userId={userId} // Pass the user ID to the modal
+        setIsProfileUpdated={setIsProfileUpdated} // Set profile updated status
+      />
       <div className="unique-search-bar">
         <input
           type="text"
@@ -214,27 +237,33 @@ function VendorManagement() {
                   <button
                     className="unique-btn unique-btn-1"
                     onClick={() => Activate(user.id)} // Activate user
+                    title="Activate User"
                   >
-                    Activate
+                    <FontAwesomeIcon icon={faUserCheck} />
                   </button>
 
                   <button
                     className="unique-btn unique-btn-2"
                     onClick={() => Deactivate(user.id)} // Deactivate user
+                    title="Deactivate User"
                   >
-                    Deactivate
+                    <FontAwesomeIcon icon={faUserXmark} />
                   </button>
+
                   <button
                     className="unique-btn unique-btn-success"
-                    onClick={() => handleRegisterUserModalShow(user.id)} // Show edit modal
+                    onClick={() => handleshowModal(user.id)} // Show edit modal
+                    title="Edit User"
                   >
-                    Edit
+                    <FontAwesomeIcon icon={faEdit} />
                   </button>
+
                   <button
                     className="unique-btn unique-btn-danger"
                     onClick={() => deleteUser(user.id)} // Delete user
+                    title="Delete User"
                   >
-                    Delete
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </td>
               </tr>

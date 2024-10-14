@@ -45,4 +45,5 @@ public interface IUserService
     
     // Update the status of a user (active/inactive)
     Task<User> UpdateUserStatus(string userId, bool status);
+    
 }

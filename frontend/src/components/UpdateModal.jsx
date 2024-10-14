@@ -5,21 +5,53 @@ import Button from "react-bootstrap/Button";
 import swal from "sweetalert";
 import "../css/RegisterModal.css"; // Import the unique CSS
 
-const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
+const UpdateModal = ({ show, handleClose, userId, setIsProfileUpdated }) => {
   // State for storing form inputs
   const [inputs, setInputs] = useState({
     email: "",
     username: "",
-    password: "",
-    role: "Vendor", // Default role
+    password: "", // Password can be empty or handled separately
+    role: "Customer", // Default role
     address: "",
-    mobileNumber: "",
+    mobileNumber: "", // Use string to handle mobile numbers
   });
 
   // State for form validation errors
   const [formErrors, setFormErrors] = useState({});
   // State to track form submission
   const [submitted, isSubmitted] = useState(false);
+  // State to store the user data fetched from API
+  const [userData, setUserData] = useState(null);
+
+  // Fetch user data by ID when modal opens
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5266/api/users/${userId}`);
+        setUserData(response.data); // Store user data in state
+      } catch (error) {
+        console.log("Error fetching user data:", error);
+      }
+    };
+
+    if (show) {
+      fetchUserData(); // Fetch user data only when the modal is shown
+    }
+  }, [show, userId]);
+
+  // Set form inputs based on fetched user data
+  useEffect(() => {
+    if (userData) {
+      setInputs({
+        email: userData.email || "",
+        username: userData.username || "",
+        password: "", // Keep empty, or handle password update separately
+        role: userData.role || "Customer", // Use role from fetched data
+        address: userData.address || "",
+        mobileNumber: userData.mobileNumber?.toString() || "", // Convert number to string for form handling
+      });
+    }
+  }, [userData]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -40,9 +72,6 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
     }
     if (!values.username) {
       errors.username = "Username is required";
-    }
-    if (!values.password) {
-      errors.password = "Password is required";
     }
     if (!values.role) {
       errors.role = "Role is required";
@@ -71,10 +100,10 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
     // If there are no form errors and the form was submitted
     if (Object.keys(formErrors).length === 0 && submitted) {
       axios
-        .post("http://localhost:5266/api/users/register", inputs) // API call to register user
+        .put(`http://localhost:5266/api/users/${userId}`, inputs) // API call to update user
         .then((res) => {
-          swal("Vendor Registered Successfully"); // Show success alert
-          setIsUserRegistered(true); // Update user registration status
+          swal("Profile Updated Successfully"); // Show success alert
+          setIsProfileUpdated(true); // Notify parent component of the update
           handleClose(); // Close the modal
         })
         .catch((error) => {
@@ -82,21 +111,22 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
           swal(error.response.data); // Show error alert
         });
     }
-  }, [formErrors, submitted]); // Dependencies for the effect
+  }, [formErrors, submitted, userId, inputs, handleClose, setIsProfileUpdated]);
 
   return (
     <Modal show={show} onHide={handleClose} centered className="register-modal">
       <Modal.Header className="register-modal-header">
-        <Modal.Title>Register Vendor</Modal.Title>
+        <Modal.Title>Update Profile</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {/* Form fields for user registration */}
+        {/* Form fields for updating profile */}
         <div className="register-form-group">
           <label className="register-form-label">Email:</label>
           <input
             type="email"
             className="register-form-control"
             name="email"
+            value={inputs.email}
             onChange={handleChange}
             required
           />
@@ -109,22 +139,11 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
             type="text"
             className="register-form-control"
             name="username"
+            value={inputs.username}
             onChange={handleChange}
             required
           />
           <p className="register-error">{formErrors.username}</p>
-        </div>
-
-        <div className="register-form-group">
-          <label className="register-form-label">Password:</label>
-          <input
-            type="password"
-            className="register-form-control"
-            name="password"
-            onChange={handleChange}
-            required
-          />
-          <p className="register-error">{formErrors.password}</p>
         </div>
 
         <div className="register-form-group">
@@ -133,6 +152,7 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
             type="text"
             className="register-form-control"
             name="address"
+            value={inputs.address}
             onChange={handleChange}
             required
           />
@@ -145,6 +165,7 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
             type="text"
             className="register-form-control"
             name="mobileNumber"
+            value={inputs.mobileNumber}
             onChange={handleChange}
             required
           />
@@ -157,7 +178,7 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
           className="unique-btn unique-btn-success"
           onClick={handleSubmit} // Call handleSubmit on button click
         >
-          Register
+          Update Profile
         </Button>
         <Button className="unique-btn unique-btn-danger" onClick={handleClose}>
           Close
@@ -167,4 +188,4 @@ const RegisterModal = ({ show, handleClose, setIsUserRegistered }) => {
   );
 };
 
-export default RegisterModal; // Export the component
+export default UpdateModal; // Export the component

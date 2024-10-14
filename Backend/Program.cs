@@ -26,7 +26,8 @@ var mongoClient = new MongoClient(connectionString);
 var mongoDatabase = mongoClient.GetDatabase(databaseName);
 
 builder.Services.AddSingleton<IMongoDatabase>(mongoDatabase);
-
+// Register EmailSettings configuration
+builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 // Register custom services
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<InventoryService>();

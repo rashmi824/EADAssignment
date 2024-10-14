@@ -74,6 +74,7 @@ public class UserService : IUserService
 
         // Insert the new user into the database
         await _users.InsertOneAsync(user);
+        NotifyCsrForApproval(user);
 
         return user; // Return the registered user
     }
@@ -81,7 +82,7 @@ public class UserService : IUserService
     // Notify CSR for approval of new customer registration
     public async Task NotifyCsrForApproval(User newUser)
     {
-        var csrUsers = await _users.Find(u => u.Role == "CSR").ToListAsync(); // Retrieve all CSR users
+        var csrUsers = await _users.Find(u => u.Role == "CSR" || u.Role == "Administrator").ToListAsync(); // Retrieve all CSR users
         string subject = "New Customer Registration Pending Approval";
         string message = $"A new customer has registered. Username: {newUser.Username}, Email: {newUser.Email}. Please review and approve.";
 
@@ -136,42 +137,45 @@ public class UserService : IUserService
         return await _users.Find(_ => true).ToListAsync(); // Return all users
     }
 
-    // Update user information
+   // Update user information
     public async Task<bool> UpdateUser(string userId, string email = null, string username = null, string password = null, string role = null, string address = null, int? mobileNumber = null)
     {
+        // Find the user by ID to retrieve their existing details
+        var existingUser = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+
+        // If the user does not exist, return false
+        if (existingUser == null) return false; // User not found
+
         // Check if the email is being updated and already exists for another user
-        if (!string.IsNullOrEmpty(email))
+        if (!string.IsNullOrEmpty(email) && existingUser.Email != email) // Only check if the email is different
         {
+            // Check for email conflict based on user role
             if (role == "Customer")
             {
-                var existingCustomer = await _users.Find(u => u.Email == email && u.Role == "Customer" && u.Id != userId).FirstOrDefaultAsync();
-                if (existingCustomer != null) return false; // Email already exists for another customer
+                var customerWithSameEmail = await _users.Find(u => u.Email == email && u.Role == "Customer" && u.Id != userId).FirstOrDefaultAsync();
+                if (customerWithSameEmail != null) return false; // Email already exists for another customer
             }
-            else
+            else // For non-customer roles
             {
-                var existingUser = await _users.Find(u => u.Email == email && u.Role != "Customer" && u.Id != userId).FirstOrDefaultAsync();
-                if (existingUser != null) return false; // Email already exists for another non-customer user
+                var nonCustomerWithSameEmail = await _users.Find(u => u.Email == email && u.Role != "Customer" && u.Id != userId).FirstOrDefaultAsync();
+                if (nonCustomerWithSameEmail != null) return false; // Email already exists for another non-customer user
             }
         }
 
-        // Find the user by ID
-        var user = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
-        if (user == null) return false; // User not found
-
         // Update the user details if provided (not null or empty)
-        if (!string.IsNullOrEmpty(email)) user.Email = email;
-        if (!string.IsNullOrEmpty(username)) user.Username = username;
-        if (!string.IsNullOrEmpty(address)) user.Address = address;
-        if (mobileNumber.HasValue) user.MobileNumber = mobileNumber.Value;
+        if (!string.IsNullOrEmpty(email)) existingUser.Email = email; // Update email
+        if (!string.IsNullOrEmpty(username)) existingUser.Username = username; // Update username
+        if (!string.IsNullOrEmpty(address)) existingUser.Address = address; // Update address
+        if (mobileNumber.HasValue) existingUser.MobileNumber = mobileNumber.Value; // Update mobile number
 
         // Hash and update the password if provided
         if (!string.IsNullOrEmpty(password))
         {
-            user.PasswordHash = _passwordHasher.Hash(password);
+            existingUser.PasswordHash = _passwordHasher.Hash(password);
         }
 
         // Update the user in the database
-        var result = await _users.ReplaceOneAsync(u => u.Id == userId, user);
+        var result = await _users.ReplaceOneAsync(u => u.Id == userId, existingUser);
         return result.ModifiedCount > 0; // Return true if the update was successful
     }
 

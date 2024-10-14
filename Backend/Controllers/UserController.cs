@@ -33,7 +33,7 @@ public class UsersController : ControllerBase
         // Notify CSR for approval if the user is a customer
         if (dto.Role == "Customer")
         {
-            _userService.NotifyCsrForApproval(user);
+            
             return Ok("Account created successfully. Your account is pending approval from CSR.");
         }
 
@@ -127,7 +127,7 @@ public class UsersController : ControllerBase
     [HttpPut("{userId}")]
     public async Task<IActionResult> UpdateUser(string userId, [FromBody] RegisterDto userUpdateDto)
     {
-        // Update user details
+        // Attempt to update user details
         var result = await _userService.UpdateUser(
             userId,
             email: userUpdateDto.Email,
@@ -138,10 +138,30 @@ public class UsersController : ControllerBase
             mobileNumber: userUpdateDto.MobileNumber
         );
 
-        if (!result) return NotFound("User not found or email already exists.");
+        // Check if the user was found and updated successfully
+        if (!result)
+        {
+            // Find the user by ID to determine the reason for failure
+            var user = await _userService.GetUserById(userId); // Assuming GetUserById fetches the user by ID
+
+            if (user == null)
+            {
+                return NotFound("User not found."); // User does not exist
+            }
+
+            // If the user exists but the email update failed due to a conflict, return a conflict status
+            if (!string.IsNullOrEmpty(userUpdateDto.Email) && user.Email != userUpdateDto.Email)
+            {
+                // Here, we assume the UpdateUser method has already handled the conflict check
+                return Conflict("Email already exists for another user."); // Email conflict
+            }
+        }
 
         return Ok("User updated successfully.");
     }
+
+
+
 
     // Delete a user by ID
     [HttpDelete("{userId}")]
