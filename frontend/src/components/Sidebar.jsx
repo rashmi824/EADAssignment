@@ -58,18 +58,12 @@ const Sidebar = ({ role }) => {
           {role === "Administrator" && (
             <>
               <li>
-                <a
-                  href="/dashboard/product-management"
-                  className={`nav-link ${isActive("/dashboard/product-management")}`}
-                >
+                <a href="/allproducts" className={`nav-link ${isActive("/allproducts")}`}>
                   Product Management
                 </a>
               </li>
               <li>
-                <a
-                  href="/dashboard/inventory-management"
-                  className={`nav-link ${isActive("/dashboard/inventory-management")}`}
-                >
+                <a href="/allInventories" className={`nav-link ${isActive("/allInventories")}`}>
                   Inventory Management
                 </a>
               </li>
@@ -102,10 +96,8 @@ const Sidebar = ({ role }) => {
           {role === "Vendor" && (
             <>
               <li>
-                <a
-                  href="/dashboard/product-management"
-                  className={`nav-link ${isActive("/dashboard/product-management")}`}
-                >
+
+                <a href="/allproducts" className={`nav-link ${isActive("/allproducts")}`}>
                   Product Management
                 </a>
               </li>

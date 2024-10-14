@@ -154,7 +154,7 @@ export default class AddInventory extends Component {
                 src={inventory}
                 alt="Item Image"
                 className="img-fluid"
-                style={{ maxWidth: "550px", height: "550px" }}
+                style={{ maxWidth: "550px", height: "550px" ,marginLeft: "-150px"}}
               />
             </div>
           </div>
@@ -162,7 +162,7 @@ export default class AddInventory extends Component {
           <div className="col-md-6">
             <div className="card" style={{ marginTop: "20px", width: "100%", marginBottom: "30px" }}>
               <div className="card-body">
-                <h1 className="text-center topic1 text1">Add Inventory</h1>
+                <h1 className="text-center topic1 text1 " style={{ color: "#9966CC" }}>Add Inventory</h1>
                 <form className="needs-validation form" noValidate>
                   <div className="form-group" style={{ marginBottom: "15px" }}>
                     <label style={{ marginBottom: "5px" }}>Product ID: </label>
@@ -226,19 +226,23 @@ export default class AddInventory extends Component {
                   </div>
 
                   <button
-                    className="btn btn-primary btn-sm"
-                    type="submit"
-                    onClick={this.onSubmit}
-                    style={{
-                      marginTop: "15px",
-                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                      borderRadius: "5px",
-                      fontWeight: "bold",
-                      padding: "10px 20px",
-                    }}
-                  >
-                    Submit
-                  </button>
+  className="btn btn-primary btn-sm"
+  type="submit"
+  onClick={this.onSubmit}
+  style={{
+    backgroundColor: "#9966CC", // Set your desired background color here
+    color: "white", 
+    borderColor: "#9966CC",             // Set your desired text color here
+    marginTop: "15px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+    borderRadius: "5px",
+    fontWeight: "bold",
+    padding: "10px 20px",
+  }}
+>
+  Submit
+</button>
+
                 </form>
               </div>
             </div>

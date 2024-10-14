@@ -1,6 +1,6 @@
 /* Custom Navbar Styling */
 .custom-navbar {
-    background-color: #4A90E2; /* Change to a modern blue shade */
+    background-color: #9966CC; /* Change to a modern blue shade */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern look */
     padding: 10px 20px;
   }
@@ -33,7 +33,7 @@
   }
   
   .navbar-nav .nav-link:hover {
-    color: #ffcc00 !important; /* Highlight color on hover */
+    color: #DDA0DD !important; /* Highlight color on hover */
   }
   
   .navbar-nav .active .nav-link {
@@ -42,8 +42,8 @@
   
   .btn-outline-dark {
     color: #fff !important;
-    border-color: #ffcc00;
-    background-color: #4A90E2;
+    border-color: #BF00FF;
+    background-color: #BF00FF;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
@@ -107,6 +107,6 @@
   }
   
   .notification-dropdown .dropdown-item:hover {
-    background-color: #f1f1f1;
+    background-color: #DDA0DD;
   }
   

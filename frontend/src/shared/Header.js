@@ -112,7 +112,7 @@ function Header() {
               alt="Store Logo"
             />
           </a>
-          <span className="site-name ms-2 align-middle">Clothing Store</span>
+          <span className="site-name ms-2 align-middle">Style Heaven</span>
 
           {/* Notification Bell Icon */}
           <div className="notification-bell ms-3 position-relative">

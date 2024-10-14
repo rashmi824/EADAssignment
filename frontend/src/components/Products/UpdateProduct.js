@@ -150,7 +150,8 @@ function UpdateProduct() {
               style={{
                 maxWidth: "550px",
                 height: "550px",
-                marginBottom: "20px",
+                marginBottom: "0px",
+                marginLeft: "-200px"
               }}
             />
           </div>
@@ -161,7 +162,7 @@ function UpdateProduct() {
             style={{ marginTop: "20px", width: "105%", marginBottom: "30px" }}
           >
             <div className="card-body">
-              <h1 className="text-center topic1 text1">Update Product</h1>
+              <h1 className="text-center topic1 text1" style={{ color: "#9966CC" }}>Update Product</h1>
               <form
                 className="needs-validation form"
                 noValidate
@@ -191,7 +192,7 @@ function UpdateProduct() {
                   />
                 </div>
                 <div className="form-group" style={{ marginBottom: "15px" }}>
-                  <label style={{ marginBottom: "5px" }}>Description:</label>
+                  <label style={{ marginBottom: "5px" }}>Vendor ID:</label>
                   <input
                     type="text"
                     className="form-control"
@@ -262,6 +263,9 @@ function UpdateProduct() {
                   onClick={onSubmit}
                   style={{
                     marginTop: "15px",
+                    backgroundColor: "#9966CC", // Set your desired background color here
+                    color: "white", 
+                    borderColor: "#9966CC", 
                     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
                     borderRadius: "5px",
                     fontWeight: "bold",
